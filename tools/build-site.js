@@ -91,6 +91,8 @@ const fill = (s) => {
   if (!REPO_URL) s = s.replace(/\s*<li data-repo>.*?<\/li>/g, '');   // sin repositorio no hay enlaces al código
   if (!SITE_URL) {
     s = s.replace(/\s*<link rel="canonical"[^>]*>/g, '');          // sin URL pública no hay canonical
+    s = s.replace(/\s*<meta property="og:url"[^>]*>/g, '');         // ni og:url
+    s = s.replace(/\s*<script type="application\/ld\+json">[\s\S]*?<\/script>/g, '');   // ni datos estructurados
     s = s.replace(/(<meta property="og:image" content=")\/(assets)/g, '$1$2');
   }
   return s;
@@ -108,6 +110,7 @@ copy(path.join(ROOT, 'css', 'fonts.css'), path.join(OUT, 'css', 'fonts.css'));
 for (const f of ['wordmark.png', 'lockup.png']) copy(path.join(ROOT, 'assets', 'logo', f), path.join(OUT, 'assets', 'logo', f));
 copy(path.join(ROOT, 'assets', 'logo', 'source.jpg'), path.join(OUT, 'assets', 'og.jpg'));
 for (const f of ['icon-32.png', 'icon-192.png']) copy(path.join(ROOT, 'assets', f), path.join(OUT, 'assets', f));
+copy(path.join(ROOT, 'build', 'icon.ico'), path.join(OUT, 'favicon.ico'));   // navegadores y buscadores piden /favicon.ico
 
 /* ---------- Aplicación web (PWA) en public/app/ ---------- */
 const APP = path.join(OUT, 'app');
@@ -123,6 +126,19 @@ copy(path.join(ROOT, 'build', 'icon.png'), path.join(APP, 'assets', 'icon-512.pn
 let appHtml = fs.readFileSync(path.join(APP, 'index.html'), 'utf8');
 appHtml = appHtml.replace('<link rel="stylesheet" href="css/fonts.css">', '<link rel="manifest" href="manifest.webmanifest">\n  <link rel="stylesheet" href="css/fonts.css">');
 appHtml = appHtml.replace('<meta name="color-scheme" content="dark light">', '<meta name="color-scheme" content="dark light">\n  <meta name="theme-color" content="#212529">');
+appHtml = appHtml.replace('<link rel="icon" type="image/png" href="assets/icon-32.png">', '<link rel="icon" type="image/png" sizes="32x32" href="assets/icon-32.png">\n  <link rel="icon" type="image/png" sizes="192x192" href="assets/icon-192.png">');
+if (SITE_URL) {   // la app también es una página pública: dirección canónica y vista previa al compartirla
+  appHtml = appHtml.replace('<link rel="stylesheet" href="css/fonts.css">', `<link rel="canonical" href="${SITE_URL}/app/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="InerCAD">
+  <meta property="og:title" content="InerCAD · Abrir la aplicación">
+  <meta property="og:description" content="Calcula en el navegador el área, el centroide, los momentos de inercia y los módulos resistentes de cualquier sección.">
+  <meta property="og:url" content="${SITE_URL}/app/">
+  <meta property="og:image" content="${SITE_URL}/assets/og.jpg">
+  <meta property="og:locale" content="es_ES">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="stylesheet" href="css/fonts.css">`);
+}
 appHtml = appHtml.replace('</body>', `<script>
 if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol)) {
   window.addEventListener('load', function () { navigator.serviceWorker.register('sw.js').catch(function () { /* sin funcionamiento sin conexión */ }); });
