@@ -21,6 +21,7 @@
   <link rel="stylesheet" href="css/fonts.css">
   <link rel="stylesheet" href="css/site.css">
   <script type="application/ld+json">[{"@context":"https://schema.org","@type":"WebSite","name":"InerCAD","url":"{{SITE_URL}}/","inLanguage":"es"},{"@context":"https://schema.org","@type":"SoftwareApplication","name":"InerCAD","url":"{{SITE_URL}}/","image":"{{SITE_URL}}/assets/og.jpg","applicationCategory":"EngineeringApplication","operatingSystem":"Windows 10, Windows 11, navegador web","softwareVersion":"{{VERSION}}","inLanguage":"es","description":"Calculadora interactiva de propiedades geométricas y momentos de inercia de secciones planas.","downloadUrl":"{{DOWNLOAD_BASE}}{{SETUP_NAME}}","license":"https://opensource.org/licenses/MIT","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"EUR"},"author":{"@type":"Person","name":"joanbibi","url":"https://github.com/joanbibi"}}]</script>
+  <!--anuncios-->
 </head>
 <body>
 <a class="skip" href="#contenido">Saltar al contenido</a>
@@ -272,7 +273,7 @@
         <h2>Antes de empezar.</h2>
       </div>
       <div class="faq rv">
-        <details><summary>¿Se envía algún dato de mis proyectos?</summary><p>No. Todo el cálculo ocurre en tu equipo. La versión web guarda el proyecto en el almacenamiento local de tu navegador, y la de escritorio en tu propio ordenador. No hay cuentas, ni registro, ni servidores que reciban tus secciones.</p></details>
+        <details><summary>¿Se envía algún dato de mis proyectos?</summary><p>No. Todo el cálculo ocurre en tu equipo. La versión web guarda el proyecto en el almacenamiento local de tu navegador, y la de escritorio en tu propio ordenador. No hay cuentas, ni registro, ni servidores que reciban tus secciones.<!--con-anuncios--> La web (no la aplicación) muestra anuncios de Google, que solo usan cookies publicitarias si las aceptas: más detalles en <a href="privacidad.html">privacidad y cookies</a>.<!--/con-anuncios--></p></details>
         <details><summary>¿Funciona sin conexión?</summary><p>La versión de escritorio, sí. La web, una vez cargada, también si la instalas como aplicación desde el menú de tu navegador.</p></details>
         <details><summary>¿Cómo guardo y comparto un proyecto?</summary><p>Con <em>Guardar</em> se descarga un archivo <span class="mono">.inercad</span> que puedes abrir de nuevo o enviar a un compañero. Además hay informe en PDF, CSV, PNG, SVG y DXF.</p></details>
         <details><summary>¿Qué calcula y qué no?</summary><p>Calcula área, centroide, momentos y producto de inercia, ejes y momentos principales, radios de giro, módulos resistentes elásticos y plásticos, y los momentos respecto a ejes de referencia. No calcula la constante de torsión de Saint-Venant ni la de alabeo.</p></details>
@@ -280,6 +281,39 @@
         <details><summary>¿Están firmados los instaladores?</summary><!--sin-firma--><p>Todavía no: hemos solicitado la firma gratuita de SignPath Foundation para proyectos de código abierto. Mientras tanto, cada archivo lleva su huella SHA-256 para que puedas comprobarlo. Más detalles en la <a href="firma.html">política de firma de código</a>.</p><!--/sin-firma--><!--firmado--><p>Sí. Se compilan en GitHub Actions a partir del código público y se firman con SignPath; el firmante es <em>SignPath Foundation</em>. Cómo se aprueba cada versión y cómo comprobar un archivo, en la <a href="firma.html">política de firma de código</a>.</p><!--/firmado--></details>
         <details><summary>¿Hay versión para macOS o Linux?</summary><p>Por ahora el instalador es solo para Windows. En macOS y Linux puedes usar la versión web, que es idéntica, e instalarla como aplicación desde el navegador.</p></details>
         <details><summary>¿Puedo fiarme de los resultados?</summary><p>El motor se contrasta con fórmulas cerradas y con tablas de perfiles (ver <a href="#precision">Precisión</a>). Aun así, son tu proyecto y tus datos: comprueba siempre la geometría de partida y los resultados antes de usarlos en un cálculo real.</p></details>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ Apoyar ============ -->
+  <section id="apoyar">
+    <div class="wrap">
+      <div class="sec-head rv">
+        <p class="eyebrow">Apoyar</p>
+        <h2>Gratis, sin cuentas y sin versiones de pago.</h2>
+        <p>InerCAD es un proyecto independiente y de código abierto. Si te resulta útil, puedes ayudar a mantenerlo.</p>
+      </div>
+      <div class="dl">
+        <!--con-apoyo--><article class="card main rv">
+          <span class="tag">Donar</span>
+          <h3>Invita a un café</h3>
+          <p>Una pequeña aportación ayuda a pagar el dominio y a dedicar más horas a nuevas funciones.</p>
+          <a class="btn primary" href="{{APOYO_URL}}" target="_blank" rel="noopener">Apoyar InerCAD</a>
+        </article><!--/con-apoyo-->
+        <!--sin-apoyo--><article class="card main rv">
+          <h3>Compártelo</h3>
+          <p>Lo que más ayuda es que lo conozcan otros ingenieros y estudiantes: recomiéndalo a tus compañeros, en clase o en tu equipo de trabajo.</p>
+        </article><!--/sin-apoyo-->
+        <!--repo--><article class="card rv">
+          <h3>Dale una estrella</h3>
+          <p>Una estrella en GitHub ayuda a que más gente encuentre InerCAD.</p>
+          <a class="btn" href="{{REPO_URL}}">Ver en GitHub</a>
+        </article>
+        <article class="card rv">
+          <h3>Cuéntanos qué falta</h3>
+          <p>Informa de un error o propón una mejora: cada aviso hace InerCAD mejor para todos.</p>
+          <a class="btn" href="{{REPO_URL}}/issues">Abrir una incidencia</a>
+        </article><!--/repo-->
       </div>
     </div>
   </section>
@@ -293,7 +327,8 @@
         <p style="margin:0;max-width:34ch">Momentos de inercia de secciones planas, de forma interactiva y exacta.</p>
       </div>
       <div><h4>Producto</h4><ul><li><a href="#funciones">Funciones</a></li><li><a href="#capturas">Capturas</a></li><li><a href="#precision">Precisión</a></li><li><a href="#faq">Preguntas</a></li></ul></div>
-      <div><h4>Usar</h4><ul><li><a href="app/">Abrir la app web</a></li><li><a href="#descargar">Descargar para Windows</a></li><li><a href="guia.html">Guía de uso</a></li><li><a href="firma.html">Política de firma de código</a></li><li data-repo><a href="{{REPO_URL}}/releases">Todas las versiones</a></li><li data-repo><a href="{{REPO_URL}}">Código fuente</a></li></ul></div>
+      <div><h4>Usar</h4><ul><li><a href="app/">Abrir la app web</a></li><li><a href="#descargar">Descargar para Windows</a></li><li><a href="guia.html">Guía de uso</a></li><li data-repo><a href="{{REPO_URL}}/releases">Todas las versiones</a></li><li data-repo><a href="{{REPO_URL}}">Código fuente</a></li></ul></div>
+      <div><h4>Proyecto</h4><ul><li><a href="#apoyar">Apoyar InerCAD</a></li><li><a href="firma.html">Política de firma de código</a></li><li><a href="aviso-legal.html">Aviso legal</a></li><li><a href="privacidad.html">Privacidad y cookies</a></li><!--con-anuncios--><li><a href="#" data-cookies>Configurar cookies</a></li><!--/con-anuncios--></ul></div>
     </div>
     <div class="legal"><span>© <span id="year">2026</span> InerCAD · Versión {{VERSION}}</span><span>Resultados orientativos: verifica siempre los datos de partida.</span></div>
   </div>

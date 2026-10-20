@@ -185,6 +185,13 @@ jobs:
         shell: bash
         env:
           MSYS_NO_PATHCONV: '1'   # Git Bash no debe convertir --base=/repo/ en una ruta de Windows
+          # anuncios, aviso legal y apoyo (variables del repositorio; ver README)
+          ADSENSE_CLIENT: ${{ vars.ADSENSE_CLIENT }}
+          LEGAL_TITULAR: ${{ vars.LEGAL_TITULAR }}
+          LEGAL_NIF: ${{ vars.LEGAL_NIF }}
+          LEGAL_DOMICILIO: ${{ vars.LEGAL_DOMICILIO }}
+          LEGAL_EMAIL: ${{ vars.LEGAL_EMAIL }}
+          APOYO_URL: ${{ vars.APOYO_URL }}
         run: |
           npm run site:web -- --site-url="$SITE_URL" --base="$SITE_BASE" --repo-url="https://github.com/${GITHUB_REPOSITORY}" --download-base="https://github.com/${GITHUB_REPOSITORY}/releases/download/${TAG}/"
 

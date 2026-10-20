@@ -108,14 +108,19 @@ function buildMenu() {
     },
     {
       label: 'Ayuda',
-      submenu: [{
-        label: 'Acerca de InerCAD',
-        click: () => dialog.showMessageBox(win, {
-          type: 'info', title: 'InerCAD', message: `InerCAD ${app.getVersion()}`,
-          detail: 'Calculadora interactiva de propiedades geométricas y momentos de inercia de secciones planas.\n\nCálculo exacto por el teorema de Green.',
-          buttons: ['Cerrar'], icon: ICON,
-        }),
-      }],
+      submenu: [
+        { label: 'Sitio web de InerCAD', click: () => shell.openExternal('https://inercad.es/') },
+        { label: 'Apoyar InerCAD…', click: () => shell.openExternal('https://inercad.es/#apoyar') },
+        { type: 'separator' },
+        {
+          label: 'Acerca de InerCAD',
+          click: () => dialog.showMessageBox(win, {
+            type: 'info', title: 'InerCAD', message: `InerCAD ${app.getVersion()}`,
+            detail: 'Calculadora interactiva de propiedades geométricas y momentos de inercia de secciones planas.\n\nCálculo exacto por el teorema de Green.',
+            buttons: ['Cerrar'], icon: ICON,
+          }),
+        },
+      ],
     },
   ];
   Menu.setApplicationMenu(Menu.buildFromTemplate(template));

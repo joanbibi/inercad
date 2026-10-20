@@ -82,7 +82,7 @@ El repositorio incluye tres flujos de GitHub Actions (`.github/workflows/`):
   el instalador y la versión portátil, crea la **Release** con ambos y `SHA256SUMS.txt`, genera el sitio con los enlaces de descarga reales
   (y sus huellas) y lo publica en **GitHub Pages**. Si SignPath está configurado, firma antes los ejecutables (ver
   [Firma de código](#firma-de-código)).
-- **Publicar sitio** (`sitio.yml`): cuando cambia la web en `main` (portada, guía, política de firma o app web), la vuelve a
+- **Publicar sitio** (`sitio.yml`): cuando cambia la web en `main` (portada, guía, textos legales o app web), la vuelve a
   publicar en Pages con los instaladores de la versión ya publicada, sin crear una versión nueva.
 
 Ajuste único: en *Settings → Pages → Build and deployment → Source*, elegir **GitHub Actions**. La web se publica en
@@ -129,6 +129,27 @@ Activación, una vez aprobado el proyecto en SignPath Foundation (en *Settings �
 | Variable | `SIGNPATH_SIGNING_POLICY_SLUG` | *(opcional)* política; por defecto `release-signing` (para probar, `test-signing`) |
 
 Sin `SIGNPATH_ORGANIZATION_ID` o sin el token, el flujo publica igual que antes, sin firmar.
+
+### Anuncios, textos legales y apoyo
+
+La web puede mostrar anuncios de **Google AdSense** en la portada y la guía. **Nunca** en la app web (`/app/`) ni en el programa
+de escritorio, que siguen sin conexiones ni anuncios. También tiene un **aviso legal**, una política de **privacidad y cookies**
+y una sección **Apoyar** (`#apoyar`), enlazada desde la ayuda de la app y el menú *Ayuda* del programa.
+
+Todo se configura con variables del repositorio (*Settings → Secrets and variables → Actions → Variables*); `tools/build-site.js`
+las lee del entorno:
+
+| Variable | Valor |
+| --- | --- |
+| `ADSENSE_CLIENT` | ID de editor de AdSense, `ca-pub-XXXXXXXXXXXXXXXX` |
+| `LEGAL_TITULAR`, `LEGAL_NIF`, `LEGAL_DOMICILIO`, `LEGAL_EMAIL` | Datos del titular para el aviso legal (LSSI-CE, art. 10) |
+| `APOYO_URL` | *(opcional)* página de donaciones (Ko-fi, GitHub Sponsors…) |
+
+- Los anuncios solo se activan con un ID válido **y** los cuatro datos legales. Entonces se inserta el código de AdSense y se
+  publica `ads.txt`; sin ellos, la web se genera sin anuncios y los textos lo reflejan.
+- El consentimiento de cookies lo gestiona el mensaje de *Privacidad y mensajes* de AdSense (CMP certificada por Google,
+  obligatoria en el EEE). En su configuración, usa `https://inercad.es/privacidad.html` como política de privacidad.
+- Tras cambiar una variable, vuelve a publicar la web: *Actions → Publicar sitio → Run workflow*.
 
 ## Licencia
 
@@ -212,7 +233,7 @@ Ejemplo: IPE 300 → A = 53,81 cm², Iy = 8 356 cm⁴, Iz = 603,8 cm⁴, Wpl,y =
 ```
 index.html          Interfaz de la aplicación
 .github/workflows/  Pruebas y publicación automática (Release + Pages, con firma de código)
-site/               Código fuente del sitio web (portada, guía, política de firma, 404, estilos y capturas)
+site/               Código fuente del sitio web (portada, guía, política de firma, aviso legal, privacidad, 404, estilos y capturas)
 css/styles.css      Estilos (tema claro/oscuro, responsive)
 css/fonts.css       @font-face de IBM Plex (generado por tools/fonts.js)
 fonts/              IBM Plex Sans, Mono y Serif en woff2 (SIL OFL 1.1), empaquetadas: funciona sin conexión

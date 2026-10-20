@@ -1,6 +1,7 @@
 /* InerCAD · genera el sitio web completo en public/ (listo para publicar en cualquier alojamiento estático)
  *
  *   public/index.html, guia.html, firma.html, 404.html   portada, guía, política de firma y página de error (desde site/)
+ *   public/aviso-legal.html, privacidad.html             textos legales (desde site/)
  *   public/app/                              la aplicación web, instalable como PWA y con funcionamiento sin conexión
  *   public/descargas/                        instalador y versión portátil de Windows + SHA256SUMS.txt (si existen en release/)
  *
@@ -14,6 +15,15 @@
  *
  * Los textos sobre la firma de código dependen de los propios instaladores de release/: si ambos llevan firma
  * Authenticode se conserva lo marcado <!--firmado-->…<!--/firmado-->; si no, lo marcado <!--sin-firma-->…<!--/sin-firma-->.
+ *
+ * Anuncios, aviso legal y apoyo: se leen de variables de entorno (en GitHub Actions, variables del repositorio).
+ *   ADSENSE_CLIENT     ID de editor de Google AdSense (ca-pub-XXXXXXXXXXXXXXXX)
+ *   LEGAL_TITULAR, LEGAL_NIF, LEGAL_DOMICILIO, LEGAL_EMAIL   datos del titular para el aviso legal (LSSI, art. 10)
+ *   APOYO_URL          página para apoyar el proyecto (Ko-fi, GitHub Sponsors…)
+ * Los anuncios solo se activan con un ID válido Y los cuatro datos legales: entonces se inserta el código de AdSense
+ * donde haya <!--anuncios--> (portada y guía; nunca en la app web ni en el programa) y se genera ads.txt.
+ * Igual que con la firma, se conserva <!--con-anuncios-->/<!--sin-anuncios-->, <!--con-datos-->/<!--sin-datos-->
+ * y <!--con-apoyo-->/<!--sin-apoyo--> según corresponda.
  */
 const fs = require('fs');
 const path = require('path');
@@ -78,16 +88,40 @@ const rel = (n) => path.join(ROOT, 'release', n);
 const have = fs.existsSync(rel(setupName)) && fs.existsSync(rel(portableName));
 if (!have && WITH_INSTALLERS) console.warn('AVISO: no se encuentran los instaladores en release/ (ejecuta npm run dist). Los datos de descarga quedarán vacíos.');
 const SIGNED = have && hasSignature(rel(setupName)) && hasSignature(rel(portableName));
+
+/* ---------- Anuncios, aviso legal y apoyo ---------- */
+const env = (k) => String(process.env[k] || '').trim();
+const esc = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+const LEGAL = { titular: env('LEGAL_TITULAR'), nif: env('LEGAL_NIF'), domicilio: env('LEGAL_DOMICILIO'), email: env('LEGAL_EMAIL') };
+const LEGAL_OK = Object.values(LEGAL).every(Boolean);
+const ADSENSE = env('ADSENSE_CLIENT');
+if (ADSENSE && !/^ca-pub-\d{16}$/.test(ADSENSE)) console.warn(`AVISO: ADSENSE_CLIENT «${ADSENSE}» no tiene la forma ca-pub-XXXXXXXXXXXXXXXX: no se activan los anuncios.`);
+if (ADSENSE && !LEGAL_OK) console.warn('AVISO: faltan datos del aviso legal (LEGAL_TITULAR, LEGAL_NIF, LEGAL_DOMICILIO, LEGAL_EMAIL): no se activan los anuncios.');
+const ADS = /^ca-pub-\d{16}$/.test(ADSENSE) && LEGAL_OK;
+const APOYO_URL = /^https:\/\/\S+$/.test(env('APOYO_URL')) ? env('APOYO_URL') : '';
+
 const tokens = {
   VERSION, SITE_URL, BASE_PATH: BASE, DOWNLOAD_BASE, REPO_URL,
   SETUP_NAME: setupName, PORTABLE_NAME: portableName,
   SETUP_SIZE: have ? mb(rel(setupName)) : '—', PORTABLE_SIZE: have ? mb(rel(portableName)) : '—',
   SETUP_SHA: have ? sha256(rel(setupName)) : '—', PORTABLE_SHA: have ? sha256(rel(portableName)) : '—',
+  LEGAL_TITULAR: esc(LEGAL.titular), LEGAL_NIF: esc(LEGAL.nif), LEGAL_DOMICILIO: esc(LEGAL.domicilio), LEGAL_EMAIL: esc(LEGAL.email),
+  APOYO_URL: esc(APOYO_URL),
 };
+// conserva el bloque <!--si-->…<!--/si--> o el <!--no-->…<!--/no--> según «on», y quita las marcas
+const choose = (s, si, no, on) => s
+  .replace(new RegExp(`<!--${on ? no : si}-->[\\s\\S]*?<!--/${on ? no : si}-->`, 'g'), '')
+  .replace(new RegExp(`<!--/?(${si}|${no})-->`, 'g'), '');
+const ADS_HEAD = ADS ? `<meta name="google-adsense-account" content="${ADSENSE}">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE}" crossorigin="anonymous"></script>` : '';
 const fill = (s) => {
   s = s.replace(/\{\{(\w+)\}\}/g, (m, k) => (k in tokens ? tokens[k] : m));
-  s = s.replace(SIGNED ? /<!--sin-firma-->[\s\S]*?<!--\/sin-firma-->/g : /<!--firmado-->[\s\S]*?<!--\/firmado-->/g, '');
-  s = s.replace(/<!--\/?(firmado|sin-firma)-->/g, '');
+  s = choose(s, 'firmado', 'sin-firma', SIGNED);
+  s = choose(s, 'con-anuncios', 'sin-anuncios', ADS);
+  s = choose(s, 'con-datos', 'sin-datos', LEGAL_OK);
+  s = choose(s, 'con-apoyo', 'sin-apoyo', !!APOYO_URL);
+  s = choose(s, 'repo', 'sin-repo', !!REPO_URL);
+  s = ADS ? s.replace(/<!--anuncios-->/g, ADS_HEAD) : s.replace(/\s*<!--anuncios-->/g, '');
   if (!REPO_URL) s = s.replace(/\s*<li data-repo>.*?<\/li>/g, '');   // sin repositorio no hay enlaces al código
   if (!SITE_URL) {
     s = s.replace(/\s*<link rel="canonical"[^>]*>/g, '');          // sin URL pública no hay canonical
@@ -193,10 +227,12 @@ if (have && WITH_INSTALLERS) {
 /* ---------- Ficheros de alojamiento ---------- */
 fs.writeFileSync(path.join(OUT, 'robots.txt'), `User-agent: *\nAllow: /\n${SITE_URL ? `Sitemap: ${SITE_URL}/sitemap.xml\n` : ''}`);
 if (SITE_URL) {
-  const urls = ['', 'guia.html', 'firma.html', 'app/'].map((u) => `  <url><loc>${SITE_URL}/${u}</loc></url>`).join('\n');
+  const urls = ['', 'guia.html', 'app/', 'firma.html', 'privacidad.html', 'aviso-legal.html'].map((u) => `  <url><loc>${SITE_URL}/${u}</loc></url>`).join('\n');
   fs.writeFileSync(path.join(OUT, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls}\n</urlset>\n`);
 }
 fs.writeFileSync(path.join(OUT, '.nojekyll'), '');
+// ads.txt: declara quién puede vender anuncios en este dominio (AdSense lo comprueba)
+if (ADS) fs.writeFileSync(path.join(OUT, 'ads.txt'), `google.com, ${ADSENSE.replace(/^ca-/, '')}, DIRECT, f08c47fec0942fa0\n`);
 fs.writeFileSync(path.join(OUT, '_headers'), `/app/sw.js\n  Cache-Control: no-cache\n/app/index.html\n  Cache-Control: no-cache\n/fonts/*\n  Cache-Control: public, max-age=31536000, immutable\n/app/fonts/*\n  Cache-Control: public, max-age=31536000, immutable\n/assets/*\n  Cache-Control: public, max-age=604800\n/descargas/*\n  Content-Disposition: attachment\n`);
 fs.writeFileSync(path.join(OUT, 'vercel.json'), JSON.stringify({
   headers: [
@@ -209,3 +245,4 @@ fs.writeFileSync(path.join(OUT, 'vercel.json'), JSON.stringify({
 const total = walk(OUT).reduce((s, f) => s + fs.statSync(path.join(OUT, f)).size, 0);
 console.log(`public/ generado: ${walk(OUT).length} archivos, ${(total / 1048576).toFixed(1)} MB${have && WITH_INSTALLERS ? ' (incluye instaladores)' : ''}`);
 console.log(`  versión ${VERSION} · base ${BASE} · descargas ${DOWNLOAD_BASE}${SITE_URL ? ' · url ' + SITE_URL : ''} · instaladores ${SIGNED ? 'firmados' : 'sin firmar'}`);
+console.log(`  anuncios ${ADS ? 'sí (' + ADSENSE + ')' : 'no'} · aviso legal ${LEGAL_OK ? 'completo' : 'sin datos del titular'} · apoyo ${APOYO_URL || 'sin enlace'}`);

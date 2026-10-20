@@ -51,6 +51,13 @@ jobs:
         env:
           PAGES_HOST: ${{ steps.pages.outputs.host }}       # dominio propio si está configurado
           PAGES_BASE: ${{ steps.pages.outputs.base_path }}
+          # anuncios, aviso legal y apoyo (variables del repositorio; ver README)
+          ADSENSE_CLIENT: ${{ vars.ADSENSE_CLIENT }}
+          LEGAL_TITULAR: ${{ vars.LEGAL_TITULAR }}
+          LEGAL_NIF: ${{ vars.LEGAL_NIF }}
+          LEGAL_DOMICILIO: ${{ vars.LEGAL_DOMICILIO }}
+          LEGAL_EMAIL: ${{ vars.LEGAL_EMAIL }}
+          APOYO_URL: ${{ vars.APOYO_URL }}
         run: |
           node tools/build-site.js --no-installers --site-url="https://${PAGES_HOST}${PAGES_BASE}" --base="${PAGES_BASE}/" --repo-url="https://github.com/${GITHUB_REPOSITORY}" --download-base="https://github.com/${GITHUB_REPOSITORY}/releases/download/${TAG}/"
 

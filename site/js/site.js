@@ -1,4 +1,4 @@
-/* InerCAD · sitio web: tema, copiar huellas, aparición suave y detalles de la guía */
+/* InerCAD · sitio web: tema, copiar huellas, cookies, aparición suave y detalles de la guía */
 (function () {
   'use strict';
   var root = document.documentElement;
@@ -50,6 +50,26 @@
     var ua = navigator.userAgent || '';
     if (/Mac|iPhone|iPad/i.test(ua)) os.textContent = 'Estás en macOS o iOS: usa la versión web.';
     else if (/Linux|Android/i.test(ua) && !/Windows/i.test(ua)) os.textContent = 'Estás en Linux o Android: usa la versión web.';
+  }
+
+  /* Configurar cookies: vuelve a mostrar el mensaje de consentimiento de Google (solo con anuncios).
+     Ese mensaje lo carga el código de AdSense, que solo está en las páginas con anuncios: desde las demás
+     se va a la portada con #configurar-cookies y allí se abre. */
+  var hasAds = !!document.querySelector('script[src*="adsbygoogle.js"]');
+  function consentMessage() {
+    window.googlefc = window.googlefc || {};
+    window.googlefc.callbackQueue = window.googlefc.callbackQueue || [];
+    window.googlefc.callbackQueue.push(function () { window.googlefc.showRevocationMessage(); });
+  }
+  document.querySelectorAll('[data-cookies]').forEach(function (a) {
+    a.addEventListener('click', function (e) {
+      e.preventDefault();
+      if (hasAds) consentMessage(); else location.href = './#configurar-cookies';
+    });
+  });
+  if (hasAds && location.hash === '#configurar-cookies') {
+    consentMessage();
+    history.replaceState(null, '', location.pathname + location.search);
   }
 
   var y = document.getElementById('year');

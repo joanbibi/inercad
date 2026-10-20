@@ -509,7 +509,9 @@ const UI = (function () {
       <h4>Atajos</h4>
       <table class="kbd-table">${keys.map((k) => `<tr><td><kbd>${U.esc(k[0])}</kbd></td><td>${U.esc(k[1])}</td></tr>`).join('')}</table>
       <h4>Alcance</h4>
-      <p>Se calculan área, centroide, momentos y producto de inercia, ejes principales, radios de giro, módulos resistentes elásticos y plásticos. No se calcula la constante de torsión de Saint-Venant ni la de alabeo.</p>`;
+      <p>Se calculan área, centroide, momentos y producto de inercia, ejes principales, radios de giro, módulos resistentes elásticos y plásticos. No se calcula la constante de torsión de Saint-Venant ni la de alabeo.</p>
+      <h4>Apoyar InerCAD</h4>
+      <p>InerCAD es gratuito y de código abierto. Si te resulta útil, puedes <a href="https://inercad.es/#apoyar" target="_blank" rel="noopener">apoyar el proyecto</a>.</p>`;
     modal({ title: 'Ayuda de InerCAD', cls: 'wide', body, footer: [btn({ label: 'Entendido', cls: 'primary', onClick: () => modalStack[modalStack.length - 1].close() })] });
   }
 
