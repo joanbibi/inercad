@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="es" data-theme="auto">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>InerCAD · Momentos de inercia de secciones</title>
+  <meta name="description" content="InerCAD: calcula área, centroide, momentos de inercia, ejes principales, módulos resistentes y más de cualquier sección compuesta. Dibuja, arrastra y modifica la geometría en tiempo real.">
+  <meta name="color-scheme" content="dark light">
+  <link rel="icon" type="image/png" href="assets/icon-32.png">
+  <link rel="apple-touch-icon" href="assets/icon-192.png">
+  <link rel="stylesheet" href="css/fonts.css">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+<div id="app">
+  <header id="topbar">
+    <div class="brand" title="InerCAD">
+      <span class="brand-word" role="img" aria-label="InerCAD"></span>
+    </div>
+    <input id="projName" class="proj-name" aria-label="Nombre del proyecto" spellcheck="false" maxlength="80">
+    <div class="tb-group" id="tbFile"></div>
+    <div class="tb-group" id="tbHist"></div>
+    <div class="tb-spacer"></div>
+    <label class="tb-select" title="Unidad de longitud del dibujo">
+      <span>Unidad</span>
+      <select id="unitSel" aria-label="Unidad de longitud"></select>
+    </label>
+    <div class="tb-group" id="tbRight"></div>
+  </header>
+
+  <main id="main">
+    <aside id="left" aria-label="Formas y elementos">
+      <div class="panel-sec" id="secShapes">
+        <div class="sec-head"><span>Formas</span><span class="sec-hint">clic o arrastra al lienzo</span></div>
+        <div class="pal-grid" id="palBasic"></div>
+        <div class="sec-head"><span>Perfiles</span><button class="link-btn" id="btnCatalog" title="Catálogo de perfiles normalizados">Catálogo…</button></div>
+        <div class="pal-grid" id="palProfiles"></div>
+      </div>
+      <div class="panel-sec grow" id="secLayers">
+        <div class="sec-head"><span>Elementos</span><span class="count" id="layerCount"></span></div>
+        <div class="layer-list" id="layerList" role="listbox" aria-label="Elementos de la sección"></div>
+      </div>
+    </aside>
+    <div class="resizer" id="resizerL" role="separator" aria-orientation="vertical"></div>
+
+    <section id="stage" aria-label="Lienzo de dibujo">
+      <canvas id="cv" tabindex="0" aria-label="Lienzo interactivo de la sección"></canvas>
+      <div id="floatbar" class="floatbar"></div>
+      <div id="zoombar" class="floatbar vertical"></div>
+      <div id="hud" class="hud"></div>
+      <div id="welcome" class="welcome"></div>
+      <div id="hint" class="hint" aria-live="polite"></div>
+      <div id="paneToggles"></div>
+    </section>
+
+    <div class="resizer" id="resizerR" role="separator" aria-orientation="vertical"></div>
+    <aside id="right" aria-label="Propiedades y resultados">
+      <div class="tabs" role="tablist" id="tabs"></div>
+      <div class="tabpanes">
+        <div class="tabpane" id="tab-props" role="tabpanel"></div>
+        <div class="tabpane" id="tab-res" role="tabpanel"></div>
+        <div class="tabpane" id="tab-axes" role="tabpanel"></div>
+        <div class="tabpane" id="tab-table" role="tabpanel"></div>
+      </div>
+    </aside>
+  </main>
+
+  <footer id="status">
+    <span id="stCursor" class="st-cell mono">x —  y —</span>
+    <span id="stMsg" class="st-cell grow"></span>
+    <span id="stWarn" class="st-cell"></span>
+    <span id="stSel" class="st-cell"></span>
+    <span id="stZoom" class="st-cell mono"></span>
+  </footer>
+</div>
+
+<div id="menuRoot"></div>
+<div id="modalRoot"></div>
+<div id="toasts" aria-live="polite"></div>
+<div id="reportDoc" class="report-doc" hidden></div>
+<input type="file" id="fileIn" accept=".inercad,.json,application/json" hidden>
+
+<script src="js/engine.js"></script>
+<script src="js/shapes.js"></script>
+<script src="js/profiles.js"></script>
+<script src="js/util.js"></script>
+<script src="js/state.js"></script>
+<script src="js/view.js"></script>
+<script src="js/report.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/panels.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

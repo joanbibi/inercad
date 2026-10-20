@@ -1,0 +1,296 @@
+<!doctype html>
+<html lang="es" data-theme="auto">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>InerCAD · Momentos de inercia de cualquier sección</title>
+  <meta name="description" content="InerCAD calcula al instante el área, el centroide, los momentos de inercia, los ejes principales y los módulos resistentes de cualquier sección. Dibuja, arrastra y modifica la geometría. Instalador para Windows y versión web.">
+  <meta name="theme-color" content="#212529">
+  <link rel="icon" type="image/png" href="assets/icon-32.png">
+  <link rel="apple-touch-icon" href="assets/icon-192.png">
+  <link rel="canonical" href="{{SITE_URL}}/">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="InerCAD · Momentos de inercia de cualquier sección">
+  <meta property="og:description" content="Dibuja la sección, arrástrala y obtén al instante área, centroide, inercias, ejes principales y módulos resistentes.">
+  <meta property="og:image" content="{{SITE_URL}}/assets/og.jpg">
+  <meta property="og:locale" content="es_ES">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="stylesheet" href="css/fonts.css">
+  <link rel="stylesheet" href="css/site.css">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"InerCAD","applicationCategory":"EngineeringApplication","operatingSystem":"Windows 10, Windows 11, navegador web","softwareVersion":"{{VERSION}}","inLanguage":"es","description":"Calculadora interactiva de propiedades geométricas y momentos de inercia de secciones planas."}</script>
+</head>
+<body>
+<a class="skip" href="#contenido">Saltar al contenido</a>
+
+<header class="nav">
+  <div class="wrap">
+    <a href="./" aria-label="InerCAD, inicio"><span class="logo-word" role="img" aria-label="InerCAD"></span></a>
+    <ul>
+      <li><a href="#funciones">Funciones</a></li>
+      <li><a href="#capturas">Capturas</a></li>
+      <li><a href="#precision">Precisión</a></li>
+      <li><a href="#descargar">Descargar</a></li>
+      <li><a href="guia.html">Guía</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button class="icon-btn" id="themeBtn" type="button" aria-label="Cambiar entre tema claro y oscuro" title="Tema claro / oscuro">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path id="themeIcon" d="M20 14.5A8 8 0 0 1 9.5 4 8 8 0 1 0 20 14.5z"/></svg>
+      </button>
+      <a class="btn primary sm" href="app/">Abrir la app</a>
+    </div>
+  </div>
+</header>
+
+<main id="contenido">
+  <!-- ============ Portada ============ -->
+  <div class="hero">
+    <div class="wrap">
+      <div class="hero-copy">
+        <span class="lockup" role="img" aria-label="InerCAD"></span>
+        <p class="eyebrow">Propiedades geométricas de secciones planas</p>
+        <h1>Los momentos de inercia de cualquier sección, calculados al instante.</h1>
+        <p class="lead">Dibuja la sección, arrástrala, cambia sus medidas y mira cómo se recalculan el área, el centroide, las inercias, los ejes principales y los módulos resistentes. Con precisión exacta, sin aproximar las curvas.</p>
+        <div class="cta">
+          <a class="btn primary" href="#descargar">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11M7 11l5 5 5-5M5 20h14"/></svg>
+            Descargar para Windows
+          </a>
+          <a class="btn" href="app/">
+            Abrir en el navegador
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </a>
+        </div>
+        <div class="hero-meta">
+          <span>Sin cuentas ni registro</span>
+          <span>Tus datos no salen de tu equipo</span>
+          <span>Versión {{VERSION}}</span>
+        </div>
+      </div>
+      <figure class="shot hero-shot rv">
+        <img src="assets/screens/principal.jpg" width="2560" height="1600" alt="InerCAD con un perfil IPE 300 reforzado con una platabanda: ejes principales, elipse de inercia y panel de resultados." fetchpriority="high">
+      </figure>
+    </div>
+  </div>
+
+  <!-- ============ Funciones ============ -->
+  <section id="funciones">
+    <div class="wrap">
+      <div class="sec-head rv">
+        <p class="eyebrow">Qué hace</p>
+        <h2>Todo lo que necesitas de una sección, en una sola pantalla.</h2>
+        <p>Pensado para estructuras y mecánica: de un perfil laminado a una sección compuesta con huecos y refuerzos.</p>
+      </div>
+      <div class="grid3">
+        <article class="card rv">
+          <div class="ico"><svg viewBox="0 0 24 24"><path d="M5 4h14v3.5h-5.5v9H19V20H5v-3.5h5.5v-9H5z"/></svg></div>
+          <h3>Dibujo interactivo</h3>
+          <p>Arrastra las formas, estira sus bordes con las asas, gira y refleja. Escribe medidas exactas, incluso como <span class="mono">2.5cm + 4mm</span>. El imán alinea con la rejilla y con las demás formas.</p>
+        </article>
+        <article class="card rv">
+          <div class="ico"><svg viewBox="0 0 24 24"><path d="M12 3l9 5-9 5-9-5zM3 13l9 5 9-5"/></svg></div>
+          <h3>Formas, perfiles y catálogo</h3>
+          <p>Once formas básicas, ocho perfiles paramétricos (I, T, L, U, Z, cruz, tubos) y un catálogo normalizado: IPE, HEA, HEB, angulares y tubos CHS, SHS y RHS.</p>
+        </article>
+        <article class="card rv">
+          <div class="ico"><svg viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="14" rx="1"/><circle cx="12" cy="12" r="3.5" stroke-dasharray="2.2 2"/></svg></div>
+          <h3>Huecos y secciones compuestas</h3>
+          <p>Marca cualquier forma como hueco para restarla. La tabla de Steiner muestra la aportación de cada elemento y avisa si dos formas se solapan o un hueco sobresale.</p>
+        </article>
+        <article class="card rv">
+          <div class="ico"><svg viewBox="0 0 24 24"><path d="M18 5H6l6 7-6 7h12"/></svg></div>
+          <h3>Resultados completos</h3>
+          <p><span class="math">A</span>, centroide, <span class="math">I<sub>x</sub></span>, <span class="math">I<sub>y</sub></span>, <span class="math">I<sub>xy</sub></span>, momento polar, radios de giro, módulos resistentes elásticos y plásticos con factor de forma, en mm, cm, m, in o ft.</p>
+        </article>
+        <article class="card rv">
+          <div class="ico"><svg viewBox="0 0 24 24"><path d="M4 18L18 4M7 8l9 9"/><circle cx="12" cy="12" r="8.5" stroke-dasharray="2 2.4"/></svg></div>
+          <h3>Ejes principales y círculo de Mohr</h3>
+          <p>Ejes y momentos principales, elipse de inercia y ejes de referencia que puedes mover y girar sobre el dibujo, con un círculo de Mohr interactivo.</p>
+        </article>
+        <article class="card rv">
+          <div class="ico"><svg viewBox="0 0 24 24"><path d="M7 9V3h10v6M7 17H4v-7h16v7h-3M7 14h10v7H7z"/></svg></div>
+          <h3>Informe y exportación</h3>
+          <p>Informe imprimible o en PDF, CSV, copia a Excel, imagen PNG, dibujo SVG y DXF para llevar los contornos a tu programa de CAD.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ Cómo funciona ============ -->
+  <section class="alt" id="como">
+    <div class="wrap">
+      <div class="sec-head rv">
+        <p class="eyebrow">Cómo funciona</p>
+        <h2>De la idea al resultado en tres pasos.</h2>
+      </div>
+      <ol class="steps" style="padding:0;margin:0">
+        <li class="rv"><h3>Construye</h3><p>Elige formas o perfiles del panel, o un perfil del catálogo. Haz clic o arrástralos al lienzo.</p></li>
+        <li class="rv"><h3>Modifica</h3><p>Muévelos, cambia su tamaño con las asas o escribe valores exactos. Un hueco resta; el imán te ayuda a encajar.</p></li>
+        <li class="rv"><h3>Obtén</h3><p>Los resultados se actualizan mientras arrastras. Exporta un informe, una tabla o el dibujo cuando termines.</p></li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ============ Capturas ============ -->
+  <section id="capturas">
+    <div class="wrap">
+      <div class="sec-head rv">
+        <p class="eyebrow">Capturas</p>
+        <h2>Una herramienta de ingeniería que se deja usar.</h2>
+        <p>Interfaz clara con tema oscuro y claro, tipografía técnica y cifras tabulares para leer los resultados de un vistazo.</p>
+      </div>
+
+      <div class="spot rv">
+        <div class="spot-copy">
+          <h3>Ejes de referencia y círculo de Mohr</h3>
+          <p>Coloca un punto y un ángulo sobre el dibujo y mira al instante los momentos respecto a esos ejes. Arrastra el punto del círculo de Mohr para girarlos.</p>
+          <ul><li>Momentos principales y su orientación</li><li>Teorema de Steiner aplicado automáticamente</li><li>Traslada el origen al centroide o a una esquina</li></ul>
+        </div>
+        <figure class="shot"><img loading="lazy" src="assets/screens/ejes.jpg" width="2560" height="1600" alt="Angular desigual con sus ejes principales, la elipse de inercia, los ejes de referencia u-v y el círculo de Mohr."></figure>
+      </div>
+
+      <div class="spot flip rv">
+        <div class="spot-copy">
+          <h3>Huecos y tabla de Steiner</h3>
+          <p>Resta agujeros y vaciados con un clic. La tabla desglosa la aportación de cada elemento, con los huecos en negativo, para que puedas comprobar el cálculo a mano.</p>
+          <ul><li>Avisos de solapes y huecos fuera del material</li><li>Área, inercias propias y términos <span class="math">A·d²</span></li></ul>
+        </div>
+        <figure class="shot"><img loading="lazy" src="assets/screens/huecos.jpg" width="2560" height="1600" alt="Placa con un agujero circular excéntrico y la tabla de cálculo de Steiner."></figure>
+      </div>
+
+      <div class="spot rv">
+        <div class="spot-copy">
+          <h3>Catálogo de perfiles normalizados</h3>
+          <p>Inserta un IPE, HEA o HEB con sus acuerdos reales y modifícalo como cualquier otra forma, o conviértelo en un polígono editable vértice a vértice.</p>
+          <ul><li>IPE, HEA, HEB, angulares L, tubos CHS, SHS y RHS</li><li>Búsqueda rápida por nombre o medidas</li></ul>
+        </div>
+        <figure class="shot"><img loading="lazy" src="assets/screens/catalogo.jpg" width="2560" height="1600" alt="Catálogo de perfiles de InerCAD con la búsqueda HEB."></figure>
+      </div>
+
+      <div class="spot flip rv">
+        <div class="spot-copy">
+          <h3>Edición precisa, también en claro</h3>
+          <p>Selecciona una forma y edita sus dimensiones, su posición y su giro con números exactos. Las cotas se dibujan sobre el lienzo.</p>
+          <ul><li>Campos con operaciones y unidades</li><li>Alinear, reflejar, duplicar y bloquear</li></ul>
+        </div>
+        <figure class="shot"><img loading="lazy" src="assets/screens/edicion-claro.jpg" width="2560" height="1600" alt="Tubo rectangular con una platabanda seleccionada y el panel de propiedades, en tema claro."></figure>
+      </div>
+
+      <div class="spot rv">
+        <div class="spot-copy">
+          <h3>Informe listo para entregar</h3>
+          <p>Dibujo, elementos, resultados, tabla de Steiner y formulación en un documento imprimible o en PDF.</p>
+          <ul><li>PDF directo desde la versión de escritorio</li><li>CSV, PNG, SVG y DXF</li></ul>
+        </div>
+        <figure class="shot"><img loading="lazy" src="assets/screens/informe.jpg" width="2560" height="1600" alt="Informe de la sección con el dibujo, la tabla de elementos y los resultados."></figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ Precisión ============ -->
+  <section class="alt" id="precision">
+    <div class="wrap prec">
+      <div class="rv">
+        <p class="eyebrow">Precisión</p>
+        <h2>Exacto, no aproximado.</h2>
+        <p style="color:var(--muted)">InerCAD aplica el teorema de Green sobre el contorno de cada forma. Las rectas y los arcos se integran de forma exacta, sin convertir las curvas en polígonos. Los resultados se contrastan con fórmulas cerradas y con las tablas de perfiles laminados.</p>
+        <div class="facts">
+          <div class="fact"><b>144</b><span>pruebas automáticas del motor de cálculo</span></div>
+          <div class="fact"><b>64</b><span>perfiles contrastados con tablas</span></div>
+          <div class="fact"><b>&lt;0,4&nbsp;%</b><span>desviación máxima frente a las tablas</span></div>
+        </div>
+      </div>
+      <div class="rv">
+        <table class="cmp">
+          <caption>IPE 300 · valores de InerCAD frente a las tablas del perfil</caption>
+          <thead><tr><th>Magnitud</th><th>InerCAD</th><th>Tabla</th></tr></thead>
+          <tbody>
+            <tr><td>Área</td><td>53,81 cm²</td><td>53,8 cm²</td></tr>
+            <tr><td><span class="math">I<sub>y</sub></span> (eje fuerte)</td><td>8 356 cm⁴</td><td>8 356 cm⁴</td></tr>
+            <tr><td><span class="math">I<sub>z</sub></span> (eje débil)</td><td>603,8 cm⁴</td><td>604 cm⁴</td></tr>
+            <tr><td><span class="math">W<sub>pl,y</sub></span></td><td>628,4 cm³</td><td>628 cm³</td></tr>
+          </tbody>
+        </table>
+        <p style="color:var(--faint);font-size:14px;margin:14px 0 0">Las tablas redondean y los perfiles se modelan con sus dimensiones nominales y acuerdos. Comprueba siempre los datos de partida.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ Descargar ============ -->
+  <section id="descargar">
+    <div class="wrap">
+      <div class="sec-head rv">
+        <p class="eyebrow">Descargar</p>
+        <h2>Instálalo en Windows o ábrelo en el navegador.</h2>
+        <p>Misma interfaz y mismos resultados en todas las versiones. Cada archivo lleva su huella SHA-256 para que puedas verificarlo.</p>
+      </div>
+      <div class="dl">
+        <article class="card main rv">
+          <span class="tag">Recomendado</span>
+          <h3>Instalador para Windows</h3>
+          <p>Se instala solo para tu usuario, sin permisos de administrador. Crea accesos directos y asocia los archivos <span class="mono">.inercad</span>.</p>
+          <div class="meta">{{SETUP_NAME}} · {{SETUP_SIZE}} · Windows 10/11 de 64 bits</div>
+          <div class="sha"><span id="sha-setup">SHA-256 {{SETUP_SHA}}</span><button type="button" data-copy="sha-setup">Copiar</button></div>
+          <a class="btn primary" href="{{DOWNLOAD_BASE}}{{SETUP_NAME}}" download>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11M7 11l5 5 5-5M5 20h14"/></svg>
+            Descargar el instalador
+          </a>
+        </article>
+        <article class="card rv">
+          <h3>Versión portátil</h3>
+          <p>Un único ejecutable que no necesita instalación: ideal para un USB o un equipo sin permisos.</p>
+          <div class="meta">{{PORTABLE_NAME}} · {{PORTABLE_SIZE}}</div>
+          <div class="sha"><span id="sha-portable">SHA-256 {{PORTABLE_SHA}}</span><button type="button" data-copy="sha-portable">Copiar</button></div>
+          <a class="btn" href="{{DOWNLOAD_BASE}}{{PORTABLE_NAME}}" download>Descargar portátil</a>
+        </article>
+        <article class="card rv">
+          <h3>En el navegador</h3>
+          <p>Funciona en Windows, macOS, Linux y tabletas. Puedes instalarla como aplicación desde el menú de tu navegador y seguir usándola sin conexión.</p>
+          <div class="meta">Sin descarga · Chrome, Edge, Firefox, Safari</div>
+          <a class="btn" href="app/">Abrir InerCAD</a>
+        </article>
+      </div>
+      <div class="note rv">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l10 18H2zM12 10v5M12 18h.01"/></svg>
+        <div><strong style="color:var(--text);font-weight:500">Aviso de Windows.</strong> Los instaladores todavía no están firmados digitalmente, así que Windows SmartScreen puede mostrar «Windows protegió su PC». Pulsa <em>Más información</em> y después <em>Ejecutar de todas formas</em>. Si quieres, compara antes la huella SHA-256 del archivo con la de esta página.</div>
+      </div>
+      <p class="reqs"><span>Requisitos: Windows 10 u 11 de 64 bits</span><span>Espacio: unos 400 MB</span><span id="osNote"></span></p>
+    </div>
+  </section>
+
+  <!-- ============ Preguntas ============ -->
+  <section class="alt" id="faq">
+    <div class="wrap">
+      <div class="sec-head rv">
+        <p class="eyebrow">Preguntas frecuentes</p>
+        <h2>Antes de empezar.</h2>
+      </div>
+      <div class="faq rv">
+        <details><summary>¿Se envía algún dato de mis proyectos?</summary><p>No. Todo el cálculo ocurre en tu equipo. La versión web guarda el proyecto en el almacenamiento local de tu navegador, y la de escritorio en tu propio ordenador. No hay cuentas, ni registro, ni servidores que reciban tus secciones.</p></details>
+        <details><summary>¿Funciona sin conexión?</summary><p>La versión de escritorio, sí. La web, una vez cargada, también si la instalas como aplicación desde el menú de tu navegador.</p></details>
+        <details><summary>¿Cómo guardo y comparto un proyecto?</summary><p>Con <em>Guardar</em> se descarga un archivo <span class="mono">.inercad</span> que puedes abrir de nuevo o enviar a un compañero. Además hay informe en PDF, CSV, PNG, SVG y DXF.</p></details>
+        <details><summary>¿Qué calcula y qué no?</summary><p>Calcula área, centroide, momentos y producto de inercia, ejes y momentos principales, radios de giro, módulos resistentes elásticos y plásticos, y los momentos respecto a ejes de referencia. No calcula la constante de torsión de Saint-Venant ni la de alabeo.</p></details>
+        <details><summary>¿Qué pasa si dos formas se solapan?</summary><p>Su zona común se cuenta dos veces, como en el método de áreas compuestas. InerCAD lo detecta y lo marca en rojo, y también avisa de huecos que sobresalen del material o de polígonos con el contorno cruzado.</p></details>
+        <details><summary>¿Hay versión para macOS o Linux?</summary><p>Por ahora el instalador es solo para Windows. En macOS y Linux puedes usar la versión web, que es idéntica, e instalarla como aplicación desde el navegador.</p></details>
+        <details><summary>¿Puedo fiarme de los resultados?</summary><p>El motor se contrasta con fórmulas cerradas y con tablas de perfiles (ver <a href="#precision">Precisión</a>). Aun así, son tu proyecto y tus datos: comprueba siempre la geometría de partida y los resultados antes de usarlos en un cálculo real.</p></details>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div>
+        <span class="logo-word" role="img" aria-label="InerCAD" style="margin-bottom:14px"></span>
+        <p style="margin:0;max-width:34ch">Momentos de inercia de secciones planas, de forma interactiva y exacta.</p>
+      </div>
+      <div><h4>Producto</h4><ul><li><a href="#funciones">Funciones</a></li><li><a href="#capturas">Capturas</a></li><li><a href="#precision">Precisión</a></li><li><a href="#faq">Preguntas</a></li></ul></div>
+      <div><h4>Usar</h4><ul><li><a href="app/">Abrir la app web</a></li><li><a href="#descargar">Descargar para Windows</a></li><li><a href="guia.html">Guía de uso</a></li><li data-repo><a href="{{REPO_URL}}/releases">Todas las versiones</a></li><li data-repo><a href="{{REPO_URL}}">Código fuente</a></li></ul></div>
+    </div>
+    <div class="legal"><span>© <span id="year">2026</span> InerCAD · Versión {{VERSION}}</span><span>Resultados orientativos: verifica siempre los datos de partida.</span></div>
+  </div>
+</footer>
+
+<script src="js/site.js"></script>
+</body>
+</html>

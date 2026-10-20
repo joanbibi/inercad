@@ -1,0 +1,12 @@
+# dependencias y resultados generados
+node_modules/
+release/
+dist/
+public/
+*.log
+
+# herramientas locales
+.claude/
+.vscode/
+.DS_Store
+Thumbs.db

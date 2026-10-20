@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="es" data-theme="auto">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Guía de uso · InerCAD</title>
+  <meta name="description" content="Guía de InerCAD: cómo construir una sección, modificarla, leer los resultados, usar ejes de referencia y círculo de Mohr, y exportar informes.">
+  <meta name="theme-color" content="#212529">
+  <link rel="icon" type="image/png" href="assets/icon-32.png">
+  <link rel="apple-touch-icon" href="assets/icon-192.png">
+  <link rel="canonical" href="{{SITE_URL}}/guia.html">
+  <link rel="stylesheet" href="css/fonts.css">
+  <link rel="stylesheet" href="css/site.css">
+</head>
+<body>
+<a class="skip" href="#contenido">Saltar al contenido</a>
+<header class="nav">
+  <div class="wrap">
+    <a href="./" aria-label="InerCAD, inicio"><span class="logo-word" role="img" aria-label="InerCAD"></span></a>
+    <ul>
+      <li><a href="./#funciones">Funciones</a></li>
+      <li><a href="./#capturas">Capturas</a></li>
+      <li><a href="./#precision">Precisión</a></li>
+      <li><a href="./#descargar">Descargar</a></li>
+      <li><a href="guia.html" aria-current="page" style="color:var(--text)">Guía</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button class="icon-btn" id="themeBtn" type="button" aria-label="Cambiar entre tema claro y oscuro" title="Tema claro / oscuro">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path id="themeIcon" d="M20 14.5A8 8 0 0 1 9.5 4 8 8 0 1 0 20 14.5z"/></svg>
+      </button>
+      <a class="btn primary sm" href="app/">Abrir la app</a>
+    </div>
+  </div>
+</header>
+
+<main id="contenido" class="wrap">
+  <div class="doc">
+    <nav class="toc" aria-label="En esta guía">
+      <h4>En esta guía</h4>
+      <a href="#primeros-pasos">Primeros pasos</a>
+      <a href="#construir">Construir la sección</a>
+      <a href="#modificar">Modificar la geometría</a>
+      <a href="#resultados">Leer los resultados</a>
+      <a href="#ejes">Ejes de referencia y Mohr</a>
+      <a href="#steiner">Tabla de Steiner y avisos</a>
+      <a href="#exportar">Informe y exportación</a>
+      <a href="#atajos">Atajos de teclado</a>
+      <a href="#versiones">Versión web y de escritorio</a>
+      <a href="#limites">Alcance y límites</a>
+    </nav>
+
+    <article class="prose">
+      <p class="eyebrow">Guía de uso</p>
+      <h1>Calcula una sección en cinco minutos.</h1>
+      <p>InerCAD calcula las propiedades geométricas de <strong>cualquier sección plana</strong> a partir del contorno de sus formas. Esta guía recorre la pantalla, cómo construir y modificar una sección, y cómo interpretar y exportar los resultados.</p>
+
+      <h2 id="primeros-pasos">Primeros pasos</h2>
+      <p>La pantalla tiene tres zonas:</p>
+      <ul>
+        <li><strong>Panel izquierdo</strong>: las formas y perfiles que puedes añadir, el acceso al catálogo y la lista de <em>elementos</em> de tu sección.</li>
+        <li><strong>Lienzo</strong>: donde dibujas. Tiene reglas, rejilla adaptable y, arriba, una barra con las herramientas y las superposiciones (centroide, ejes, elipse de inercia). El cuadro «Sección» muestra los resultados clave y se puede mover o minimizar.</li>
+        <li><strong>Panel derecho</strong>, con cuatro pestañas: <em>Forma</em> (propiedades de lo seleccionado), <em>Resultados</em>, <em>Ejes</em> (ejes de referencia y círculo de Mohr) y <em>Tabla</em> (cálculo de Steiner).</li>
+      </ul>
+      <figure class="shot"><img loading="lazy" src="assets/screens/principal.jpg" width="2560" height="1600" alt="Pantalla principal de InerCAD con un perfil IPE 300 y una platabanda."></figure>
+      <div class="callout"><b>Prueba rápida.</b> En el menú <em>Ejemplos</em> hay secciones ya montadas: viga IPE, sección en T, cajón con refuerzo, placa con agujero y un angular desigual.</div>
+
+      <h2 id="construir">Construir la sección</h2>
+      <h3>Formas y perfiles</h3>
+      <p>Haz clic en una forma del panel para añadirla, o arrástrala al lienzo. Hay once formas básicas (rectángulo con esquinas redondeadas, círculo, elipse, triángulo, trapecio, polígono regular, semicírculo, cuarto de círculo, sector, segmento y polígono libre) y ocho perfiles paramétricos: I/H, T, L, U, Z, cruz, tubo circular y tubo rectangular, con sus radios de acuerdo.</p>
+      <h3>Catálogo normalizado</h3>
+      <p>El botón <em>Catálogo…</em> abre una lista con IPE, HEA, HEB, angulares de alas iguales y tubos CHS, SHS y RHS. Se insertan como perfiles paramétricos con sus dimensiones nominales y acuerdos, así que puedes seguir editándolos.</p>
+      <figure class="shot"><img loading="lazy" src="assets/screens/catalogo.jpg" width="2560" height="1600" alt="Catálogo de perfiles con la búsqueda HEB."></figure>
+      <h3>Polígono libre</h3>
+      <p>Pulsa <kbd>P</kbd> y haz clic para colocar vértices. Cierra el contorno haciendo clic en el primero, con <kbd>Enter</kbd> o con doble clic; <kbd>Retroceso</kbd> borra el último vértice y <kbd>Esc</kbd> cancela. Después puedes arrastrar los vértices, crear otros nuevos desde los puntos intermedios o editar sus coordenadas y radios de acuerdo en una tabla.</p>
+      <h3>Huecos</h3>
+      <p>En el panel <em>Forma</em>, la función <strong>Hueco</strong> convierte cualquier forma en un vaciado que se resta del material. Es la manera de modelar agujeros, cajeados o tubos a partir de formas simples.</p>
+
+      <h2 id="modificar">Modificar la geometría</h2>
+      <ul>
+        <li><strong>Mover</strong>: arrastra la forma. El imán la alinea con la rejilla y con los bordes y centros de las demás (guías rosas). <kbd>Alt</kbd> lo desactiva y <kbd>Mayús</kbd> restringe el movimiento a un eje.</li>
+        <li><strong>Cambiar el tamaño</strong>: arrastra las asas cuadradas de los bordes; el borde opuesto se queda fijo. Las asas circulares ajustan espesores y ángulos.</li>
+        <li><strong>Girar</strong>: arrastra el círculo que hay sobre la forma (<kbd>Mayús</kbd> gira de 15° en 15°).</li>
+        <li><strong>Seleccionar varias</strong>: <kbd>Mayús</kbd>+clic, o arrastra una ventana en el vacío (de izquierda a derecha selecciona lo contenido; de derecha a izquierda, lo que se toque). Con varias formas puedes alinearlas, reflejarlas, duplicarlas o cambiar su función.</li>
+        <li><strong>Bloquear u ocultar</strong> elementos desde la lista. Ocultar un elemento lo excluye del cálculo, útil para comparar variantes.</li>
+        <li><strong>Deshacer y rehacer</strong> sin límite con <kbd>Ctrl</kbd>+<kbd>Z</kbd> y <kbd>Ctrl</kbd>+<kbd>Y</kbd>.</li>
+      </ul>
+      <h3>Valores exactos, con operaciones y unidades</h3>
+      <p>Los campos numéricos del panel <em>Forma</em> aceptan expresiones y unidades. Con el dibujo en milímetros:</p>
+      <table>
+        <thead><tr><th>Escribes</th><th>Resulta</th></tr></thead>
+        <tbody>
+          <tr><td><code>12*5</code></td><td>60</td></tr>
+          <tr><td><code>2.5cm + 4mm</code></td><td>29</td></tr>
+          <tr><td><code>(3+4)/2</code></td><td>3,5</td></tr>
+          <tr><td><code>1,5m</code></td><td>1500</td></tr>
+        </tbody>
+      </table>
+      <p>Con las flechas <kbd>↑</kbd> <kbd>↓</kbd> ajustas el valor paso a paso (<kbd>Mayús</kbd> ×10, <kbd>Alt</kbd> ÷10). Las unidades de dibujo disponibles son mm, cm, m, in y ft, y los resultados pueden mostrarse en otra unidad distinta.</p>
+      <figure class="shot"><img loading="lazy" src="assets/screens/edicion-claro.jpg" width="2560" height="1600" alt="Edición de una platabanda con el panel de propiedades, en tema claro."></figure>
+
+      <h2 id="resultados">Leer los resultados</h2>
+      <p>Los resultados se recalculan mientras arrastras. Todo se mide respecto a ejes <strong>por el centroide G</strong>, salvo lo marcado como «respecto al origen».</p>
+      <div class="formula">I<sub>x</sub> = ∫ y² dA &nbsp;&nbsp; I<sub>y</sub> = ∫ x² dA &nbsp;&nbsp; I<sub>xy</sub> = ∫ x·y dA &nbsp;&nbsp; I<sub>p</sub> = I<sub>x</sub> + I<sub>y</sub></div>
+      <div class="formula">I<sub>1,2</sub> = (I<sub>x</sub> + I<sub>y</sub>)/2 ± √[ ((I<sub>x</sub> − I<sub>y</sub>)/2)² + I<sub>xy</sub>² ] &nbsp;&nbsp; r = √(I/A) &nbsp;&nbsp; W<sub>el</sub> = I / y<sub>máx</sub></div>
+      <table>
+        <thead><tr><th>Grupo</th><th>Qué contiene</th></tr></thead>
+        <tbody>
+          <tr><td>Geometría</td><td>Área neta, centroide respecto al origen y dimensiones totales.</td></tr>
+          <tr><td>Momentos de inercia</td><td><em>I<sub>x</sub></em>, <em>I<sub>y</sub></em>, producto de inercia <em>I<sub>xy</sub></em> y momento polar.</td></tr>
+          <tr><td>Ejes principales</td><td><em>I<sub>1</sub></em> (máximo), <em>I<sub>2</sub></em> (mínimo) y el ángulo <em>θ<sub>1</sub></em> del eje respecto al que el momento es máximo, medido en sentido antihorario desde x.</td></tr>
+          <tr><td>Radios de giro</td><td>Respecto a x, a y y a los ejes principales.</td></tr>
+          <tr><td>Módulos elásticos</td><td><em>W</em> para las cuatro fibras extremas (superior, inferior, izquierda, derecha).</td></tr>
+          <tr><td>Módulos plásticos</td><td><em>Z<sub>x</sub></em>, <em>Z<sub>y</sub></em> respecto al eje neutro plástico (el que reparte el área en dos mitades iguales), su posición y el factor de forma <em>α = Z/W</em>.</td></tr>
+          <tr><td>Respecto al origen</td><td>Momentos respecto a los ejes x–y del lienzo, calculados con el teorema de Steiner.</td></tr>
+        </tbody>
+      </table>
+      <div class="callout"><b>Convención de signos.</b> Los ejes son x a la derecha e y hacia arriba. <em>I<sub>xy</sub></em> es positivo cuando el material se concentra en los cuadrantes primero y tercero. Pasa el cursor por una fila para copiar su valor.</div>
+
+      <h2 id="ejes">Ejes de referencia y círculo de Mohr</h2>
+      <p>En la pestaña <em>Ejes</em> activa los ejes de referencia <em>u–v</em>: un punto <em>P</em> (por defecto el centroide) y un ángulo <em>θ</em>. Puedes moverlos arrastrando en el lienzo o escribiendo valores. InerCAD calcula <em>I<sub>u</sub></em>, <em>I<sub>v</sub></em> e <em>I<sub>uv</sub></em> y los dibuja en el círculo de Mohr; arrastrar el punto del círculo gira los ejes.</p>
+      <p>El botón <em>Ejes principales</em> coloca <em>u</em> sobre el eje principal 1. También puedes trasladar el origen del dibujo al centroide o a una esquina de la sección.</p>
+      <figure class="shot"><img loading="lazy" src="assets/screens/ejes.jpg" width="2560" height="1600" alt="Ejes de referencia y círculo de Mohr sobre un angular desigual."></figure>
+
+      <h2 id="steiner">Tabla de Steiner y avisos</h2>
+      <p>La pestaña <em>Tabla</em> aplica <strong>I = Σ ( Ī<sub>i</sub> + A<sub>i</sub>·d<sub>i</sub>² )</strong> elemento a elemento, con <em>d</em> medida desde el centroide de toda la sección. Los huecos aportan valores negativos, de modo que puedes comprobar el cálculo a mano.</p>
+      <figure class="shot"><img loading="lazy" src="assets/screens/huecos.jpg" width="2560" height="1600" alt="Tabla de cálculo de Steiner de una placa con agujero."></figure>
+      <p>InerCAD te avisa, marcándolo en rojo en el lienzo, cuando:</p>
+      <ul>
+        <li>dos formas de <strong>material</strong> se solapan (su zona común se contaría dos veces);</li>
+        <li>un <strong>hueco</strong> sobresale del material (restaría un área que no existe);</li>
+        <li>el contorno de un polígono se <strong>cruza consigo mismo</strong>.</li>
+      </ul>
+
+      <h2 id="exportar">Informe y exportación</h2>
+      <table>
+        <thead><tr><th>Salida</th><th>Para qué</th></tr></thead>
+        <tbody>
+          <tr><td>Informe (PDF)</td><td>Dibujo, elementos, resultados, tabla de Steiner y formulación. En la versión de escritorio se guarda directamente como PDF.</td></tr>
+          <tr><td>CSV y portapapeles</td><td>Resultados en tabla para Excel; con la coma decimal si la eliges en los ajustes.</td></tr>
+          <tr><td>PNG y SVG</td><td>Imagen del dibujo o dibujo vectorial con arcos.</td></tr>
+          <tr><td>DXF</td><td>Contornos como polilíneas, con capas para el material, los huecos y el centroide, en las unidades del dibujo.</td></tr>
+          <tr><td>Proyecto <code>.inercad</code></td><td>Guardar y volver a abrir tu trabajo. También se autoguarda en tu equipo.</td></tr>
+        </tbody>
+      </table>
+      <figure class="shot"><img loading="lazy" src="assets/screens/informe.jpg" width="2560" height="1600" alt="Informe de la sección."></figure>
+
+      <h2 id="atajos">Atajos de teclado</h2>
+      <table>
+        <thead><tr><th>Tecla</th><th>Acción</th></tr></thead>
+        <tbody>
+          <tr><td><kbd>V</kbd> · <kbd>H</kbd> · <kbd>P</kbd></td><td>Seleccionar · mover la vista · dibujar polígono</td></tr>
+          <tr><td><kbd>Espacio</kbd> + arrastrar</td><td>Desplazar la vista (también con el botón central del ratón)</td></tr>
+          <tr><td>Rueda del ratón</td><td>Acercar y alejar sobre el cursor</td></tr>
+          <tr><td><kbd>F</kbd> · <kbd>Mayús</kbd>+<kbd>F</kbd></td><td>Ajustar toda la sección · ajustar la selección</td></tr>
+          <tr><td><kbd>G</kbd> · <kbd>S</kbd></td><td>Rejilla · imán</td></tr>
+          <tr><td>Flechas</td><td>Mover la selección un paso de rejilla (<kbd>Mayús</kbd> ×10, <kbd>Alt</kbd> ÷10)</td></tr>
+          <tr><td><kbd>Supr</kbd></td><td>Eliminar la selección (o el vértice seleccionado de un polígono)</td></tr>
+          <tr><td><kbd>Ctrl</kbd>+<kbd>D</kbd> · <kbd>Ctrl</kbd>+<kbd>A</kbd></td><td>Duplicar · seleccionar todo</td></tr>
+          <tr><td><kbd>Ctrl</kbd>+<kbd>Z</kbd> · <kbd>Ctrl</kbd>+<kbd>Y</kbd></td><td>Deshacer · rehacer</td></tr>
+          <tr><td><kbd>Ctrl</kbd>+<kbd>S</kbd></td><td>Guardar el proyecto en un archivo</td></tr>
+          <tr><td><kbd>?</kbd></td><td>Abrir la ayuda dentro de la aplicación</td></tr>
+        </tbody>
+      </table>
+
+      <h2 id="versiones">Versión web y de escritorio</h2>
+      <p>Las dos versiones son la misma aplicación. La de <strong>escritorio</strong> (Windows) se instala sin permisos de administrador, abre los archivos <code>.inercad</code> con doble clic y guarda el informe como PDF directamente. La <strong>web</strong> funciona en cualquier sistema y puede instalarse como aplicación desde el menú del navegador para usarla sin conexión.</p>
+      <p>Tu trabajo se guarda en tu propio equipo: InerCAD no envía proyectos a ningún servidor.</p>
+
+      <h2 id="limites">Alcance y límites</h2>
+      <ul>
+        <li>No calcula la constante de torsión de Saint-Venant ni la de alabeo (sí el momento polar <em>I<sub>x</sub> + I<sub>y</sub></em>).</li>
+        <li>Si dos formas de material se solapan, la zona común se cuenta dos veces: es el método de áreas compuestas, y por eso se avisa.</li>
+        <li>Los perfiles del catálogo se modelan con sus dimensiones nominales y acuerdos; pequeñas diferencias con las tablas son normales.</li>
+        <li>Los resultados son orientativos: comprueba siempre los datos de partida antes de usarlos en un cálculo real.</li>
+      </ul>
+      <p style="margin-top:40px"><a class="btn primary" href="app/">Abrir InerCAD</a> &nbsp; <a class="btn" href="./#descargar">Descargar</a></p>
+    </article>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="legal" style="margin-top:0;padding-top:0;border-top:0"><span>© <span id="year">2026</span> InerCAD · Versión {{VERSION}}</span><span><a href="./">Inicio</a> · <a href="app/">Abrir la app</a></span></div>
+  </div>
+</footer>
+<script src="js/site.js"></script>
+</body>
+</html>

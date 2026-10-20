@@ -1,0 +1,27 @@
+name: Pruebas
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  pruebas:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      # --ignore-scripts: las pruebas no necesitan descargar el binario de Electron
+      - run: npm ci --ignore-scripts
+      - name: Pruebas del motor y de las utilidades
+        run: npm test
+      - name: Se genera el archivo único de la aplicación
+        run: node build.js
+      - name: Se genera el sitio web (sin instaladores)
+        run: node tools/build-site.js --no-installers

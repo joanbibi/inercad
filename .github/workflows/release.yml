@@ -1,0 +1,88 @@
+name: Publicar versión
+
+# Al subir una etiqueta vX.Y.Z (que debe coincidir con la versión de package.json):
+#   1) se prueban y se construyen los instaladores de Windows,
+#   2) se crea la Release de GitHub con el instalador, la versión portátil y las huellas SHA-256,
+#   3) se genera el sitio web con los enlaces de descarga reales y se publica en GitHub Pages.
+on:
+  push:
+    tags: ['v*.*.*']
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Etiqueta existente que se va a publicar (p. ej. v1.0.0)'
+        required: true
+
+concurrency:
+  group: publicar
+  cancel-in-progress: false
+
+jobs:
+  construir:
+    runs-on: windows-latest
+    permissions:
+      contents: write
+    env:
+      TAG: ${{ inputs.tag || github.ref_name }}
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.TAG }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: La etiqueta debe coincidir con la versión de package.json
+        shell: bash
+        run: |
+          V=$(node -p "require('./package.json').version")
+          if [ "$TAG" != "v$V" ]; then
+            echo "::error::La etiqueta $TAG no coincide con la versión $V de package.json"
+            exit 1
+          fi
+          echo "V=$V" >> "$GITHUB_ENV"
+
+      - run: npm test
+
+      - name: Instalador y versión portátil de Windows
+        run: npm run dist
+
+      - name: Release de GitHub con los instaladores
+        shell: bash
+        run: |
+          (cd release && sha256sum "InerCAD-Setup-$V.exe" "InerCAD-$V-portable.exe" > SHA256SUMS.txt)
+          gh release view "$TAG" >/dev/null 2>&1 || gh release create "$TAG" --title "InerCAD $V" --generate-notes --verify-tag
+          gh release upload "$TAG" "release/InerCAD-Setup-$V.exe" "release/InerCAD-$V-portable.exe" release/SHA256SUMS.txt --clobber
+
+      - name: Sitio web con los enlaces de descarga de esta versión
+        shell: bash
+        env:
+          MSYS_NO_PATHCONV: '1'   # Git Bash no debe convertir --base=/repo/ en una ruta de Windows
+        run: |
+          REPO="${GITHUB_REPOSITORY#*/}"
+          OWNER="${GITHUB_REPOSITORY_OWNER,,}"
+          if [[ "${REPO,,}" == *.github.io ]]; then URL="https://${REPO,,}"; BASE="/"; else URL="https://${OWNER}.github.io/${REPO}"; BASE="/${REPO}/"; fi
+          npm run site:web -- --site-url="$URL" --base="$BASE" --repo-url="https://github.com/${GITHUB_REPOSITORY}" --download-base="https://github.com/${GITHUB_REPOSITORY}/releases/download/${TAG}/"
+
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: public
+
+  publicar-sitio:
+    needs: construir
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.despliegue.outputs.page_url }}
+    steps:
+      - id: despliegue
+        uses: actions/deploy-pages@v4
