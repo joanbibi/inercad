@@ -42,16 +42,18 @@ jobs:
             echo "::notice::La versión v$V todavía no está publicada: la web se actualizará con su Release."
           fi
 
+      - id: pages
+        if: steps.version.outputs.publicada == 'true'
+        uses: actions/configure-pages@v5
+
       - name: Sitio web con los enlaces de descarga de esa versión
         if: steps.version.outputs.publicada == 'true'
+        env:
+          PAGES_HOST: ${{ steps.pages.outputs.host }}       # dominio propio si está configurado
+          PAGES_BASE: ${{ steps.pages.outputs.base_path }}
         run: |
-          REPO="${GITHUB_REPOSITORY#*/}"
-          OWNER="${GITHUB_REPOSITORY_OWNER,,}"
-          if [[ "${REPO,,}" == *.github.io ]]; then URL="https://${REPO,,}"; BASE="/"; else URL="https://${OWNER}.github.io/${REPO}"; BASE="/${REPO}/"; fi
-          node tools/build-site.js --no-installers --site-url="$URL" --base="$BASE" --repo-url="https://github.com/${GITHUB_REPOSITORY}" --download-base="https://github.com/${GITHUB_REPOSITORY}/releases/download/${TAG}/"
+          node tools/build-site.js --no-installers --site-url="https://${PAGES_HOST}${PAGES_BASE}" --base="${PAGES_BASE}/" --repo-url="https://github.com/${GITHUB_REPOSITORY}" --download-base="https://github.com/${GITHUB_REPOSITORY}/releases/download/${TAG}/"
 
-      - if: steps.version.outputs.publicada == 'true'
-        uses: actions/configure-pages@v5
       - if: steps.version.outputs.publicada == 'true'
         uses: actions/upload-pages-artifact@v3
         with:

@@ -57,14 +57,17 @@ jobs:
           fi
           echo "V=$V" >> "$GITHUB_ENV"
 
-      - name: Dirección del sitio en GitHub Pages
+      - id: pages
+        uses: actions/configure-pages@v5
+
+      - name: Dirección del sitio en GitHub Pages (dominio propio si está configurado)
         shell: bash
+        env:
+          PAGES_HOST: ${{ steps.pages.outputs.host }}
+          PAGES_BASE: ${{ steps.pages.outputs.base_path }}
         run: |
-          REPO="${GITHUB_REPOSITORY#*/}"
-          OWNER="${GITHUB_REPOSITORY_OWNER,,}"
-          if [[ "${REPO,,}" == *.github.io ]]; then URL="https://${REPO,,}"; BASE="/"; else URL="https://${OWNER}.github.io/${REPO}"; BASE="/${REPO}/"; fi
-          echo "SITE_URL=$URL" >> "$GITHUB_ENV"
-          echo "SITE_BASE=$BASE" >> "$GITHUB_ENV"
+          echo "SITE_URL=https://${PAGES_HOST}${PAGES_BASE}" >> "$GITHUB_ENV"
+          echo "SITE_BASE=${PAGES_BASE}/" >> "$GITHUB_ENV"
 
       - run: npm test
 
@@ -185,7 +188,6 @@ jobs:
         run: |
           npm run site:web -- --site-url="$SITE_URL" --base="$SITE_BASE" --repo-url="https://github.com/${GITHUB_REPOSITORY}" --download-base="https://github.com/${GITHUB_REPOSITORY}/releases/download/${TAG}/"
 
-      - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
           path: public

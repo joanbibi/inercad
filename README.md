@@ -85,7 +85,9 @@ El repositorio incluye tres flujos de GitHub Actions (`.github/workflows/`):
 - **Publicar sitio** (`sitio.yml`): cuando cambia la web en `main` (portada, guía, política de firma o app web), la vuelve a
   publicar en Pages con los instaladores de la versión ya publicada, sin crear una versión nueva.
 
-Ajuste único: en *Settings → Pages → Build and deployment → Source*, elegir **GitHub Actions**.
+Ajuste único: en *Settings → Pages → Build and deployment → Source*, elegir **GitHub Actions**. La web se publica en
+**https://inercad.es** (dominio propio configurado en *Settings → Pages*); los flujos leen el dominio y la ruta base de esa
+configuración, así que sin dominio propio vuelven solos a `USUARIO.github.io/REPO`.
 
 Para publicar una versión nueva:
 
@@ -100,7 +102,7 @@ git push origin main --tags
 
 ### Firma de código
 
-**Code signing policy:** [joanbibi.github.io/inercad/firma.html](https://joanbibi.github.io/inercad/firma.html)
+**Code signing policy:** [inercad.es/firma.html](https://inercad.es/firma.html)
 
 Free code signing provided by [SignPath.io](https://about.signpath.io), certificate by [SignPath Foundation](https://signpath.org)
 
