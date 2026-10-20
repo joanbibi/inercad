@@ -249,11 +249,15 @@
           <a class="btn" href="app/">Abrir InerCAD</a>
         </article>
       </div>
-      <div class="note rv">
+      <!--sin-firma--><div class="note rv">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l10 18H2zM12 10v5M12 18h.01"/></svg>
-        <div><strong style="color:var(--text);font-weight:500">Aviso de Windows.</strong> Los instaladores todavía no están firmados digitalmente, así que Windows SmartScreen puede mostrar «Windows protegió su PC». Pulsa <em>Más información</em> y después <em>Ejecutar de todas formas</em>. Si quieres, compara antes la huella SHA-256 del archivo con la de esta página.</div>
-      </div>
-      <p class="reqs"><span>Requisitos: Windows 10 u 11 de 64 bits</span><span>Espacio: unos 400 MB</span><span id="osNote"></span></p>
+        <div><strong style="color:var(--text);font-weight:500">Aviso de Windows.</strong> Los instaladores todavía no están firmados digitalmente, así que Windows SmartScreen puede mostrar «Windows protegió su PC». Pulsa <em>Más información</em> y después <em>Ejecutar de todas formas</em>. Si quieres, compara antes la huella SHA-256 del archivo con la de esta página. La firma ya está solicitada: consulta la <a href="firma.html">política de firma de código</a>.</div>
+      </div><!--/sin-firma-->
+      <!--firmado--><div class="note ok rv">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l8 3v6c0 4.6-3.4 8.3-8 9-4.6-.7-8-4.4-8-9V6zM8.5 12l2.5 2.5 4.5-5"/></svg>
+        <div><strong style="color:var(--text);font-weight:500">Firmado digitalmente.</strong> El instalador y la versión portátil llevan firma de código; el firmante que muestra Windows es <em>SignPath Foundation</em>. Con una versión recién publicada, SmartScreen puede avisar hasta que acumula reputación: pulsa <em>Más información</em> y después <em>Ejecutar de todas formas</em>. Más detalles en la <a href="firma.html">política de firma de código</a>.</div>
+      </div><!--/firmado-->
+      <p class="reqs"><span>Requisitos: Windows 10 u 11 de 64 bits</span><span>Espacio: unos 400 MB</span><span><a href="firma.html" style="color:inherit">Política de firma de código (Code signing policy)</a></span><span id="osNote"></span></p>
     </div>
   </section>
 
@@ -270,6 +274,7 @@
         <details><summary>¿Cómo guardo y comparto un proyecto?</summary><p>Con <em>Guardar</em> se descarga un archivo <span class="mono">.inercad</span> que puedes abrir de nuevo o enviar a un compañero. Además hay informe en PDF, CSV, PNG, SVG y DXF.</p></details>
         <details><summary>¿Qué calcula y qué no?</summary><p>Calcula área, centroide, momentos y producto de inercia, ejes y momentos principales, radios de giro, módulos resistentes elásticos y plásticos, y los momentos respecto a ejes de referencia. No calcula la constante de torsión de Saint-Venant ni la de alabeo.</p></details>
         <details><summary>¿Qué pasa si dos formas se solapan?</summary><p>Su zona común se cuenta dos veces, como en el método de áreas compuestas. InerCAD lo detecta y lo marca en rojo, y también avisa de huecos que sobresalen del material o de polígonos con el contorno cruzado.</p></details>
+        <details><summary>¿Están firmados los instaladores?</summary><!--sin-firma--><p>Todavía no: hemos solicitado la firma gratuita de SignPath Foundation para proyectos de código abierto. Mientras tanto, cada archivo lleva su huella SHA-256 para que puedas comprobarlo. Más detalles en la <a href="firma.html">política de firma de código</a>.</p><!--/sin-firma--><!--firmado--><p>Sí. Se compilan en GitHub Actions a partir del código público y se firman con SignPath; el firmante es <em>SignPath Foundation</em>. Cómo se aprueba cada versión y cómo comprobar un archivo, en la <a href="firma.html">política de firma de código</a>.</p><!--/firmado--></details>
         <details><summary>¿Hay versión para macOS o Linux?</summary><p>Por ahora el instalador es solo para Windows. En macOS y Linux puedes usar la versión web, que es idéntica, e instalarla como aplicación desde el navegador.</p></details>
         <details><summary>¿Puedo fiarme de los resultados?</summary><p>El motor se contrasta con fórmulas cerradas y con tablas de perfiles (ver <a href="#precision">Precisión</a>). Aun así, son tu proyecto y tus datos: comprueba siempre la geometría de partida y los resultados antes de usarlos en un cálculo real.</p></details>
       </div>
@@ -285,7 +290,7 @@
         <p style="margin:0;max-width:34ch">Momentos de inercia de secciones planas, de forma interactiva y exacta.</p>
       </div>
       <div><h4>Producto</h4><ul><li><a href="#funciones">Funciones</a></li><li><a href="#capturas">Capturas</a></li><li><a href="#precision">Precisión</a></li><li><a href="#faq">Preguntas</a></li></ul></div>
-      <div><h4>Usar</h4><ul><li><a href="app/">Abrir la app web</a></li><li><a href="#descargar">Descargar para Windows</a></li><li><a href="guia.html">Guía de uso</a></li><li data-repo><a href="{{REPO_URL}}/releases">Todas las versiones</a></li><li data-repo><a href="{{REPO_URL}}">Código fuente</a></li></ul></div>
+      <div><h4>Usar</h4><ul><li><a href="app/">Abrir la app web</a></li><li><a href="#descargar">Descargar para Windows</a></li><li><a href="guia.html">Guía de uso</a></li><li><a href="firma.html">Política de firma de código</a></li><li data-repo><a href="{{REPO_URL}}/releases">Todas las versiones</a></li><li data-repo><a href="{{REPO_URL}}">Código fuente</a></li></ul></div>
     </div>
     <div class="legal"><span>© <span id="year">2026</span> InerCAD · Versión {{VERSION}}</span><span>Resultados orientativos: verifica siempre los datos de partida.</span></div>
   </div>

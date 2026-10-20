@@ -1,6 +1,6 @@
 /* InerCAD · genera el sitio web completo en public/ (listo para publicar en cualquier alojamiento estático)
  *
- *   public/index.html, guia.html, 404.html   portada, guía y página de error (desde site/)
+ *   public/index.html, guia.html, firma.html, 404.html   portada, guía, política de firma y página de error (desde site/)
  *   public/app/                              la aplicación web, instalable como PWA y con funcionamiento sin conexión
  *   public/descargas/                        instalador y versión portátil de Windows + SHA256SUMS.txt (si existen en release/)
  *
@@ -11,6 +11,9 @@
  *                                             p. ej. https://github.com/USUARIO/REPO/releases/download/v1.0.0/)
  *   --no-installers                           no copia los .exe a public/descargas (alojamientos con límite de tamaño)
  *   --repo-url=https://github.com/USUARIO/REPO  añade en el pie los enlaces al código y a las versiones
+ *
+ * Los textos sobre la firma de código dependen de los propios instaladores de release/: si ambos llevan firma
+ * Authenticode se conserva lo marcado <!--firmado-->…<!--/firmado-->; si no, lo marcado <!--sin-firma-->…<!--/sin-firma-->.
  */
 const fs = require('fs');
 const path = require('path');
@@ -52,6 +55,18 @@ function walk(dir, base = dir) {
 }
 const sha256 = (file) => crypto.createHash('sha256').update(fs.readFileSync(file)).digest('hex');
 const mb = (file) => `${Math.round(fs.statSync(file).size / 1048576)} MB`;
+// ¿Lleva el ejecutable firma Authenticode? Se mira la tabla de certificados (directorio 4) del encabezado PE
+function hasSignature(file) {
+  const b = Buffer.alloc(4096);
+  const fd = fs.openSync(file, 'r');
+  try { fs.readSync(fd, b, 0, b.length, 0); } finally { fs.closeSync(fd); }
+  if (b.readUInt16LE(0) !== 0x5a4d) return false;                         // «MZ»
+  const pe = b.readUInt32LE(0x3c);
+  if (pe + 256 > b.length || b.readUInt32LE(pe) !== 0x4550) return false; // «PE\0\0»
+  const opt = pe + 24;
+  const dirs = opt + (b.readUInt16LE(opt) === 0x20b ? 112 : 96);          // PE32+ o PE32
+  return b.readUInt32LE(dirs + 4 * 8 + 4) > 0;
+}
 
 rm(OUT);
 mkdir(OUT);
@@ -62,6 +77,7 @@ const portableName = `InerCAD-${VERSION}-portable.exe`;
 const rel = (n) => path.join(ROOT, 'release', n);
 const have = fs.existsSync(rel(setupName)) && fs.existsSync(rel(portableName));
 if (!have && WITH_INSTALLERS) console.warn('AVISO: no se encuentran los instaladores en release/ (ejecuta npm run dist). Los datos de descarga quedarán vacíos.');
+const SIGNED = have && hasSignature(rel(setupName)) && hasSignature(rel(portableName));
 const tokens = {
   VERSION, SITE_URL, BASE_PATH: BASE, DOWNLOAD_BASE, REPO_URL,
   SETUP_NAME: setupName, PORTABLE_NAME: portableName,
@@ -70,6 +86,8 @@ const tokens = {
 };
 const fill = (s) => {
   s = s.replace(/\{\{(\w+)\}\}/g, (m, k) => (k in tokens ? tokens[k] : m));
+  s = s.replace(SIGNED ? /<!--sin-firma-->[\s\S]*?<!--\/sin-firma-->/g : /<!--firmado-->[\s\S]*?<!--\/firmado-->/g, '');
+  s = s.replace(/<!--\/?(firmado|sin-firma)-->/g, '');
   if (!REPO_URL) s = s.replace(/\s*<li data-repo>.*?<\/li>/g, '');   // sin repositorio no hay enlaces al código
   if (!SITE_URL) {
     s = s.replace(/\s*<link rel="canonical"[^>]*>/g, '');          // sin URL pública no hay canonical
@@ -159,7 +177,7 @@ if (have && WITH_INSTALLERS) {
 /* ---------- Ficheros de alojamiento ---------- */
 fs.writeFileSync(path.join(OUT, 'robots.txt'), `User-agent: *\nAllow: /\n${SITE_URL ? `Sitemap: ${SITE_URL}/sitemap.xml\n` : ''}`);
 if (SITE_URL) {
-  const urls = ['', 'guia.html', 'app/'].map((u) => `  <url><loc>${SITE_URL}/${u}</loc></url>`).join('\n');
+  const urls = ['', 'guia.html', 'firma.html', 'app/'].map((u) => `  <url><loc>${SITE_URL}/${u}</loc></url>`).join('\n');
   fs.writeFileSync(path.join(OUT, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls}\n</urlset>\n`);
 }
 fs.writeFileSync(path.join(OUT, '.nojekyll'), '');
@@ -174,4 +192,4 @@ fs.writeFileSync(path.join(OUT, 'vercel.json'), JSON.stringify({
 
 const total = walk(OUT).reduce((s, f) => s + fs.statSync(path.join(OUT, f)).size, 0);
 console.log(`public/ generado: ${walk(OUT).length} archivos, ${(total / 1048576).toFixed(1)} MB${have && WITH_INSTALLERS ? ' (incluye instaladores)' : ''}`);
-console.log(`  versión ${VERSION} · base ${BASE} · descargas ${DOWNLOAD_BASE}${SITE_URL ? ' · url ' + SITE_URL : ''}`);
+console.log(`  versión ${VERSION} · base ${BASE} · descargas ${DOWNLOAD_BASE}${SITE_URL ? ' · url ' + SITE_URL : ''} · instaladores ${SIGNED ? 'firmados' : 'sin firmar'}`);

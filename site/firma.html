@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="es" data-theme="auto">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Política de firma de código · InerCAD</title>
+  <meta name="description" content="Política de firma de código (code signing policy) de InerCAD: qué se firma, cómo se construye y se aprueba cada versión, quién forma el equipo y cómo comprobar la firma.">
+  <meta name="theme-color" content="#212529">
+  <link rel="icon" type="image/png" href="assets/icon-32.png">
+  <link rel="apple-touch-icon" href="assets/icon-192.png">
+  <link rel="canonical" href="{{SITE_URL}}/firma.html">
+  <link rel="stylesheet" href="css/fonts.css">
+  <link rel="stylesheet" href="css/site.css">
+</head>
+<body>
+<a class="skip" href="#contenido">Saltar al contenido</a>
+<header class="nav">
+  <div class="wrap">
+    <a href="./" aria-label="InerCAD, inicio"><span class="logo-word" role="img" aria-label="InerCAD"></span></a>
+    <ul>
+      <li><a href="./#funciones">Funciones</a></li>
+      <li><a href="./#capturas">Capturas</a></li>
+      <li><a href="./#precision">Precisión</a></li>
+      <li><a href="./#descargar">Descargar</a></li>
+      <li><a href="guia.html">Guía</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button class="icon-btn" id="themeBtn" type="button" aria-label="Cambiar entre tema claro y oscuro" title="Tema claro / oscuro">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path id="themeIcon" d="M20 14.5A8 8 0 0 1 9.5 4 8 8 0 1 0 20 14.5z"/></svg>
+      </button>
+      <a class="btn primary sm" href="app/">Abrir la app</a>
+    </div>
+  </div>
+</header>
+
+<main id="contenido" class="wrap">
+  <div class="doc">
+    <nav class="toc" aria-label="En esta página">
+      <h4>En esta página</h4>
+      <a href="#estado">Estado</a>
+      <a href="#que-se-firma">Qué se firma</a>
+      <a href="#proceso">Cómo se construye y se firma</a>
+      <a href="#equipo">Equipo y funciones</a>
+      <a href="#privacidad">Privacidad</a>
+      <a href="#terceros">Componentes de terceros</a>
+      <a href="#comprobar">Comprobar un archivo</a>
+      <a href="#desinstalar">Desinstalar</a>
+      <a href="#english">In English</a>
+    </nav>
+
+    <article class="prose">
+      <p class="eyebrow">Code signing policy</p>
+      <h1>Política de firma de código</h1>
+      <p>Los ejecutables de InerCAD para Windows se firman digitalmente. La firma te permite comprobar quién publica el archivo y que nadie lo ha modificado después de construirlo.</p>
+      <div class="callout">Free code signing provided by <a href="https://about.signpath.io">SignPath.io</a>, certificate by <a href="https://signpath.org">SignPath Foundation</a><br>
+        <span style="font-size:.94em">Firma de código gratuita proporcionada por SignPath.io, con certificado de SignPath Foundation.</span></div>
+
+      <h2 id="estado">Estado</h2>
+      <!--firmado--><p>Los archivos de la versión <strong>{{VERSION}}</strong> están firmados. En Windows, el firmante que aparece es <strong>SignPath Foundation</strong>.</p><!--/firmado-->
+      <!--sin-firma--><p>Hemos solicitado la firma a SignPath Foundation. Los archivos de la versión <strong>{{VERSION}}</strong> todavía <strong>no están firmados</strong>. Mientras tanto, puedes comprobarlos con su huella SHA-256 (ver <a href="#comprobar">Comprobar un archivo</a>).</p><!--/sin-firma-->
+
+      <h2 id="que-se-firma">Qué se firma</h2>
+      <ul>
+        <li>El instalador, <code>{{SETUP_NAME}}</code>.</li>
+        <li>La versión portátil, <code>{{PORTABLE_NAME}}</code>.</li>
+        <li>El ejecutable de la aplicación, <code>InerCAD.exe</code>, que va dentro de los dos anteriores.</li>
+      </ul>
+      <p>Solo se firman binarios construidos a partir del código de este proyecto. Las bibliotecas de Electron y Chromium (archivos <code>.dll</code>) se incluyen sin cambios, tal como las publican sus autores. El desinstalador que genera el empaquetador NSIS no lleva firma propia.</p>
+
+      <h2 id="proceso">Cómo se construye y se firma</h2>
+      <ol>
+        <li>Cada versión parte de una etiqueta <code>vX.Y.Z</code> del repositorio público.</li>
+        <li>GitHub Actions compila en servidores de GitHub, con el código y los scripts de compilación del repositorio (flujo <code>release.yml</code>). Ningún ejecutable que se publica se compila en un equipo personal.</li>
+        <li>Los ejecutables se envían a SignPath, que verifica que proceden de esa compilación. Un aprobador del equipo revisa y aprueba a mano cada solicitud de firma.</li>
+        <li>Los archivos firmados se publican en GitHub Releases junto con <code>SHA256SUMS.txt</code>, y esta web muestra sus huellas.</li>
+      </ol>
+      <ul>
+        <li data-repo><a href="{{REPO_URL}}">Código fuente</a></li>
+        <li data-repo><a href="{{REPO_URL}}/blob/main/.github/workflows/release.yml">Flujo de compilación y firma (release.yml)</a></li>
+        <li data-repo><a href="{{REPO_URL}}/releases">Todas las versiones publicadas</a></li>
+      </ul>
+
+      <h2 id="equipo">Equipo y funciones</h2>
+      <table>
+        <thead><tr><th>Función</th><th>Quién</th><th>Qué hace</th></tr></thead>
+        <tbody>
+          <tr><td>Autores</td><td><a href="https://github.com/joanbibi">joanbibi</a></td><td>Pueden modificar el código del repositorio sin una revisión adicional.</td></tr>
+          <tr><td>Revisores</td><td><a href="https://github.com/joanbibi">joanbibi</a></td><td>Revisan cualquier cambio de personas ajenas al equipo (<em>pull requests</em>) antes de integrarlo.</td></tr>
+          <tr><td>Aprobadores</td><td><a href="https://github.com/joanbibi">joanbibi</a></td><td>Aprueban cada solicitud de firma en SignPath.</td></tr>
+        </tbody>
+      </table>
+      <p>Todos los miembros del equipo usan autenticación en dos pasos en GitHub y en SignPath.</p>
+
+      <h2 id="privacidad">Privacidad</h2>
+      <div class="callout"><b>Este programa no transfiere ninguna información a otros sistemas en red, salvo que lo pida expresamente el usuario o la persona que lo instala o lo utiliza.</b></div>
+      <ul>
+        <li>InerCAD no tiene telemetría, estadísticas de uso, cuentas ni búsqueda automática de actualizaciones.</li>
+        <li>Tus proyectos se guardan solo en tu equipo: en los archivos <code>.inercad</code> que tú guardes y en el autoguardado local de la aplicación.</li>
+        <li>Si pulsas un enlace externo, por ejemplo a esta web, se abre en tu navegador. La aplicación no hace ninguna otra conexión.</li>
+        <li>El instalador funciona sin permisos de administrador. Instala la aplicación para tu usuario, crea los accesos directos y asocia los archivos <code>.inercad</code>; antes de empezar te deja elegir la carpeta de instalación.</li>
+      </ul>
+
+      <h2 id="terceros">Componentes de terceros</h2>
+      <p>InerCAD se distribuye con <a href="https://www.electronjs.org">Electron</a> (licencia MIT), que incluye Chromium y Node.js, y con las tipografías <a href="https://github.com/IBM/plex">IBM Plex</a> (SIL Open Font License 1.1). Ninguno de estos componentes envía datos por su cuenta en InerCAD.</p>
+      <ul>
+        <li data-repo><a href="{{REPO_URL}}/blob/main/LICENSE">Licencia de InerCAD (MIT)</a></li>
+        <li data-repo><a href="{{REPO_URL}}/blob/main/THIRD_PARTY_NOTICES.md">Licencias de terceros</a></li>
+      </ul>
+
+      <h2 id="comprobar">Comprobar un archivo</h2>
+      <h3>La firma</h3>
+      <p>En el Explorador de archivos, haz clic con el botón derecho en el archivo y abre <em>Propiedades → Firmas digitales</em>: el firmante debe ser <strong>SignPath Foundation</strong>. También puedes comprobarlo en PowerShell; el estado debe ser <code>Valid</code>:</p>
+      <pre><code>Get-AuthenticodeSignature .\{{SETUP_NAME}} | Format-List Status, SignerCertificate</code></pre>
+      <h3>La huella SHA-256</h3>
+      <p>Compárala con la que aparece en la <a href="./#descargar">página de descargas</a> y en <code>SHA256SUMS.txt</code>:</p>
+      <pre><code>Get-FileHash .\{{SETUP_NAME}} -Algorithm SHA256</code></pre>
+      <p>Aunque el archivo esté firmado, Windows SmartScreen puede avisar al ejecutar una versión recién publicada, hasta que acumula reputación con las descargas. Si la firma y la huella coinciden, pulsa <em>Más información</em> y después <em>Ejecutar de todas formas</em>.</p>
+
+      <h2 id="desinstalar">Desinstalar</h2>
+      <ul>
+        <li><strong>Instalador</strong>: <em>Configuración → Aplicaciones → Aplicaciones instaladas → InerCAD → Desinstalar</em>. Se quitan la aplicación, los accesos directos y la asociación de archivos <code>.inercad</code>. Tus proyectos guardados no se tocan.</li>
+        <li><strong>Versión portátil</strong>: basta con borrar el archivo.</li>
+      </ul>
+      <ul>
+        <li data-repo>¿Crees que un archivo firmado no procede de este proyecto? <a href="{{REPO_URL}}/issues">Abre una incidencia</a>.</li>
+      </ul>
+
+      <h2 id="english">In English</h2>
+      <p>Windows releases of InerCAD are built from the public source repository by GitHub Actions on GitHub-hosted runners and signed through SignPath. Every signing request is manually approved.</p>
+      <p>Free code signing provided by <a href="https://about.signpath.io">SignPath.io</a>, certificate by <a href="https://signpath.org">SignPath Foundation</a>.</p>
+      <p><strong>Team:</strong> <a href="https://github.com/joanbibi">joanbibi</a> (author, reviewer and approver). All team members use multi-factor authentication on GitHub and SignPath.</p>
+      <p><strong>Privacy:</strong> This program will not transfer any information to other networked systems unless specifically requested by the user or the person installing or operating it.</p>
+    </article>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="legal" style="margin-top:0;padding-top:0;border-top:0"><span>© <span id="year">2026</span> InerCAD · Versión {{VERSION}}</span><span><a href="./">Inicio</a> · <a href="guia.html">Guía</a> · <a href="app/">Abrir la app</a></span></div>
+  </div>
+</footer>
+<script src="js/site.js"></script>
+</body>
+</html>

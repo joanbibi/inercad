@@ -28,8 +28,8 @@ Tras `npm run dist` se generan en `release/`:
 
 Es la misma interfaz que la versión web empaquetada con Electron. Aporta: ventana propia con icono, doble clic en un
 `.inercad` para abrirlo, diálogo de guardado de Windows y **«Guardar PDF» directo** del informe.
-Los archivos pesan ~100 MB porque incluyen el motor de Chromium. No están firmados digitalmente: la primera vez, Windows
-SmartScreen puede avisar («Más información → Ejecutar de todas formas»).
+Los archivos pesan ~100 MB porque incluyen el motor de Chromium. La versión 1.0.0 no está firmada digitalmente: la primera vez,
+Windows SmartScreen puede avisar («Más información → Ejecutar de todas formas»). Ver [Firma de código](#firma-de-código).
 
 Para desarrollar: `npm install` y después `npm run desktop` (abre la app), `npm run desktop:smoke` (prueba automática
 de arranque + cálculo + PDF) y `npm run dist` (instalador y portátil). Si npm bloquea el script de instalación de
@@ -70,17 +70,20 @@ Para una versión nueva: subir el número de `package.json`, `npm run dist` (ins
 sitio se regeneran con `npm run screenshots` (abre la propia aplicación y la captura a 2×).
 
 El instalador de Windows (NSIS) es **por usuario** (sin permisos de administrador), deja elegir la carpeta, crea accesos directos,
-asocia los `.inercad` y se desinstala limpiamente. Aún **no está firmado**: Windows SmartScreen avisará hasta que se firme con un
-certificado de firma de código.
+asocia los `.inercad` y se desinstala limpiamente. La firma de código se hace en GitHub Actions con SignPath (ver
+[Firma de código](#firma-de-código)); las compilaciones locales con `npm run dist` salen sin firmar.
 
 ### Publicación en GitHub (Pages + Releases)
 
-El repositorio incluye dos flujos de GitHub Actions (`.github/workflows/`):
+El repositorio incluye tres flujos de GitHub Actions (`.github/workflows/`):
 
 - **Pruebas** (`ci.yml`): en cada `push` a `main` y en cada *pull request* ejecuta `npm test` y comprueba que la aplicación y el sitio se generan.
 - **Publicar versión** (`release.yml`): al subir una etiqueta `vX.Y.Z` (que debe coincidir con la versión de `package.json`), construye en Windows
   el instalador y la versión portátil, crea la **Release** con ambos y `SHA256SUMS.txt`, genera el sitio con los enlaces de descarga reales
-  (y sus huellas) y lo publica en **GitHub Pages**.
+  (y sus huellas) y lo publica en **GitHub Pages**. Si SignPath está configurado, firma antes los ejecutables (ver
+  [Firma de código](#firma-de-código)).
+- **Publicar sitio** (`sitio.yml`): cuando cambia la web en `main` (portada, guía, política de firma o app web), la vuelve a
+  publicar en Pages con los instaladores de la versión ya publicada, sin crear una versión nueva.
 
 Ajuste único: en *Settings → Pages → Build and deployment → Source*, elegir **GitHub Actions**.
 
@@ -94,6 +97,36 @@ git commit -am "Versión 1.0.1"
 git tag v1.0.1
 git push origin main --tags
 ```
+
+### Firma de código
+
+**Code signing policy:** [joanbibi.github.io/inercad/firma.html](https://joanbibi.github.io/inercad/firma.html)
+
+Free code signing provided by [SignPath.io](https://about.signpath.io), certificate by [SignPath Foundation](https://signpath.org)
+
+| Función | Miembros |
+| --- | --- |
+| Autores y revisores | [joanbibi](https://github.com/joanbibi) |
+| Aprobadores | [joanbibi](https://github.com/joanbibi) |
+
+**Privacidad:** este programa no transfiere ninguna información a otros sistemas en red, salvo que lo pida expresamente el usuario
+o la persona que lo instala o lo utiliza.
+
+Cómo funciona: `release.yml` construye la aplicación, envía `InerCAD.exe` a SignPath, empaqueta el instalador y la versión
+portátil con ese ejecutable ya firmado y envía también los dos instaladores. Cada solicitud de firma se aprueba a mano en SignPath.
+El generador del sitio detecta si los instaladores llevan firma y adapta los avisos de la web.
+Las configuraciones de artefacto que usa SignPath están en [`.signpath/`](.signpath/).
+
+Activación, una vez aprobado el proyecto en SignPath Foundation (en *Settings → Secrets and variables → Actions*):
+
+| Tipo | Nombre | Valor |
+| --- | --- | --- |
+| Secreto | `SIGNPATH_API_TOKEN` | Token de API de SignPath con permiso para enviar solicitudes |
+| Variable | `SIGNPATH_ORGANIZATION_ID` | ID de la organización en SignPath |
+| Variable | `SIGNPATH_PROJECT_SLUG` | *(opcional)* proyecto; por defecto `inercad` |
+| Variable | `SIGNPATH_SIGNING_POLICY_SLUG` | *(opcional)* política; por defecto `release-signing` (para probar, `test-signing`) |
+
+Sin `SIGNPATH_ORGANIZATION_ID` o sin el token, el flujo publica igual que antes, sin firmar.
 
 ## Licencia
 
@@ -176,8 +209,8 @@ Ejemplo: IPE 300 → A = 53,81 cm², Iy = 8 356 cm⁴, Iz = 603,8 cm⁴, Wpl,y =
 
 ```
 index.html          Interfaz de la aplicación
-.github/workflows/  Pruebas y publicación automática (Release + Pages)
-site/               Código fuente del sitio web (portada, guía, 404, estilos y capturas)
+.github/workflows/  Pruebas y publicación automática (Release + Pages, con firma de código)
+site/               Código fuente del sitio web (portada, guía, política de firma, 404, estilos y capturas)
 css/styles.css      Estilos (tema claro/oscuro, responsive)
 css/fonts.css       @font-face de IBM Plex (generado por tools/fonts.js)
 fonts/              IBM Plex Sans, Mono y Serif en woff2 (SIL OFL 1.1), empaquetadas: funciona sin conexión
@@ -199,6 +232,7 @@ tools/fonts.js      Copia las fuentes desde @fontsource y genera css/fonts.css
 tools/build-site.js Genera el sitio completo en public/ (con la app como PWA y las descargas)
 tools/make-screenshots.js  Capturas reales de la aplicación para el sitio
 build/installer.nsh Ajustes del instalador de Windows (limpieza de la asociación de archivos)
+.signpath/          Configuraciones de artefacto para la firma con SignPath
 ```
 
 La aplicación en sí no tiene dependencias ni paso de compilación (JavaScript puro); Electron y electron-builder solo

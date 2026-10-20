@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- SignPath · configuración de artefacto «aplicacion»
+     Artefacto: el ejecutable de la aplicación sin empaquetar (release/win-unpacked/InerCAD.exe), subido por release.yml.
+     electron-builder escribe en InerCAD.exe ProductVersion = X.Y.Z.0 y FileVersion = X.Y.Z. -->
+<artifact-configuration xmlns="http://signpath.io/artifact-configuration/v1">
+  <parameters>
+    <parameter name="version" required="true" />
+  </parameters>
+  <zip-file>
+    <pe-file path="InerCAD.exe" product-name="InerCAD" product-version="${version}.0" file-version="${version}">
+      <authenticode-sign />
+    </pe-file>
+  </zip-file>
+</artifact-configuration>

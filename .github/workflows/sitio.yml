@@ -1,0 +1,72 @@
+name: Publicar sitio
+
+# Vuelve a publicar la web en GitHub Pages sin crear una versión nueva (cambios en la portada, la guía, la política de firma
+# o la app web). Usa los instaladores ya publicados en la Release de la versión de package.json para las huellas y los
+# enlaces de descarga; si esa versión aún no está publicada, no hace nada: la web se publicará junto con su Release.
+on:
+  push:
+    branches: [main]
+    paths: ['site/**', 'tools/build-site.js', 'index.html', 'css/**', 'js/**', 'fonts/**', 'assets/**']
+  workflow_dispatch:
+
+concurrency:
+  group: sitio
+  cancel-in-progress: true
+
+jobs:
+  construir:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    env:
+      GH_TOKEN: ${{ github.token }}
+    outputs:
+      publicada: ${{ steps.version.outputs.publicada }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Instaladores de la versión publicada
+        id: version
+        run: |
+          V=$(node -p "require('./package.json').version")
+          if gh release view "v$V" >/dev/null 2>&1; then
+            gh release download "v$V" --dir release --pattern "InerCAD-Setup-$V.exe" --pattern "InerCAD-$V-portable.exe"
+            echo "TAG=v$V" >> "$GITHUB_ENV"
+            echo "publicada=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "publicada=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::La versión v$V todavía no está publicada: la web se actualizará con su Release."
+          fi
+
+      - name: Sitio web con los enlaces de descarga de esa versión
+        if: steps.version.outputs.publicada == 'true'
+        run: |
+          REPO="${GITHUB_REPOSITORY#*/}"
+          OWNER="${GITHUB_REPOSITORY_OWNER,,}"
+          if [[ "${REPO,,}" == *.github.io ]]; then URL="https://${REPO,,}"; BASE="/"; else URL="https://${OWNER}.github.io/${REPO}"; BASE="/${REPO}/"; fi
+          node tools/build-site.js --no-installers --site-url="$URL" --base="$BASE" --repo-url="https://github.com/${GITHUB_REPOSITORY}" --download-base="https://github.com/${GITHUB_REPOSITORY}/releases/download/${TAG}/"
+
+      - if: steps.version.outputs.publicada == 'true'
+        uses: actions/configure-pages@v5
+      - if: steps.version.outputs.publicada == 'true'
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: public
+
+  publicar-sitio:
+    needs: construir
+    if: needs.construir.outputs.publicada == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.despliegue.outputs.page_url }}
+    steps:
+      - id: despliegue
+        uses: actions/deploy-pages@v4

@@ -2,8 +2,17 @@ name: Publicar versión
 
 # Al subir una etiqueta vX.Y.Z (que debe coincidir con la versión de package.json):
 #   1) se prueban y se construyen los instaladores de Windows,
-#   2) se crea la Release de GitHub con el instalador, la versión portátil y las huellas SHA-256,
-#   3) se genera el sitio web con los enlaces de descarga reales y se publica en GitHub Pages.
+#   2) si SignPath está configurado, se firman InerCAD.exe y después el instalador y la versión portátil,
+#   3) se crea la Release de GitHub con el instalador, la versión portátil y las huellas SHA-256,
+#   4) se genera el sitio web con los enlaces de descarga reales y se publica en GitHub Pages.
+#
+# Firma de código con SignPath (opcional: sin configurar, se publica sin firmar).
+# En Settings → Secrets and variables → Actions:
+#   secreto   SIGNPATH_API_TOKEN            token de API de SignPath con permiso para enviar solicitudes
+#   variable  SIGNPATH_ORGANIZATION_ID      ID de la organización en SignPath
+#   variable  SIGNPATH_PROJECT_SLUG         (opcional) proyecto en SignPath; por defecto «inercad»
+#   variable  SIGNPATH_SIGNING_POLICY_SLUG  (opcional) política de firma; por defecto «release-signing»
+# Las configuraciones de artefacto («aplicacion» e «instaladores») están en .signpath/artifact-configurations/.
 on:
   push:
     tags: ['v*.*.*']
@@ -22,6 +31,7 @@ jobs:
     runs-on: windows-latest
     permissions:
       contents: write
+      actions: read     # SignPath descarga los artefactos de esta ejecución
     env:
       TAG: ${{ inputs.tag || github.ref_name }}
       GH_TOKEN: ${{ github.token }}
@@ -47,16 +57,125 @@ jobs:
           fi
           echo "V=$V" >> "$GITHUB_ENV"
 
+      - name: Dirección del sitio en GitHub Pages
+        shell: bash
+        run: |
+          REPO="${GITHUB_REPOSITORY#*/}"
+          OWNER="${GITHUB_REPOSITORY_OWNER,,}"
+          if [[ "${REPO,,}" == *.github.io ]]; then URL="https://${REPO,,}"; BASE="/"; else URL="https://${OWNER}.github.io/${REPO}"; BASE="/${REPO}/"; fi
+          echo "SITE_URL=$URL" >> "$GITHUB_ENV"
+          echo "SITE_BASE=$BASE" >> "$GITHUB_ENV"
+
       - run: npm test
 
-      - name: Instalador y versión portátil de Windows
+      - name: ¿Hay firma de código configurada?
+        id: firma
+        shell: bash
+        env:
+          ORG: ${{ vars.SIGNPATH_ORGANIZATION_ID }}
+          HAY_TOKEN: ${{ secrets.SIGNPATH_API_TOKEN != '' }}
+        run: |
+          if [ -n "$ORG" ] && [ "$HAY_TOKEN" = "true" ]; then
+            echo "activa=true" >> "$GITHUB_OUTPUT"
+            echo "Se firmarán los ejecutables con SignPath."
+          else
+            echo "activa=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::SignPath no está configurado: los instaladores se publican sin firmar."
+          fi
+
+      - name: Instalador y versión portátil de Windows (sin firmar)
+        if: steps.firma.outputs.activa != 'true'
         run: npm run dist
+
+      # ---------- Con firma: aplicación → firma de InerCAD.exe → instaladores con esa aplicación → firma de los instaladores
+      - name: Aplicación sin empaquetar
+        if: steps.firma.outputs.activa == 'true'
+        run: npm run dist:dir
+
+      - name: Enviar InerCAD.exe a la firma
+        id: app-sin-firmar
+        if: steps.firma.outputs.activa == 'true'
+        uses: actions/upload-artifact@v7
+        with:
+          name: app-sin-firmar
+          path: release/win-unpacked/InerCAD.exe
+          if-no-files-found: error
+          retention-days: 1
+
+      - name: Firmar InerCAD.exe con SignPath
+        if: steps.firma.outputs.activa == 'true'
+        uses: signpath/github-action-submit-signing-request@v3
+        with:
+          api-token: ${{ secrets.SIGNPATH_API_TOKEN }}
+          organization-id: ${{ vars.SIGNPATH_ORGANIZATION_ID }}
+          project-slug: ${{ vars.SIGNPATH_PROJECT_SLUG || 'inercad' }}
+          signing-policy-slug: ${{ vars.SIGNPATH_SIGNING_POLICY_SLUG || 'release-signing' }}
+          artifact-configuration-slug: aplicacion
+          github-artifact-id: ${{ steps.app-sin-firmar.outputs.artifact-id }}
+          parameters: |
+            version: "${{ env.V }}"
+          wait-for-completion: true
+          wait-for-completion-timeout-in-seconds: 10800   # cada solicitud se aprueba a mano en SignPath
+          output-artifact-directory: firmado/app
+
+      - name: Instalador y versión portátil con la aplicación firmada
+        if: steps.firma.outputs.activa == 'true'
+        shell: pwsh
+        run: |
+          $s = Get-AuthenticodeSignature firmado/app/InerCAD.exe
+          if ($s.Status -ne 'Valid') { throw "InerCAD.exe no tiene una firma válida: $($s.Status) $($s.StatusMessage)" }
+          Write-Host "InerCAD.exe firmado por $($s.SignerCertificate.Subject)"
+          Move-Item release/win-unpacked firmado/win-unpacked
+          Copy-Item firmado/app/InerCAD.exe firmado/win-unpacked/InerCAD.exe -Force
+          npx electron-builder --win --x64 --prepackaged firmado/win-unpacked --publish never
+          if ($LASTEXITCODE) { exit $LASTEXITCODE }
+
+      - name: Enviar los instaladores a la firma
+        id: instaladores-sin-firmar
+        if: steps.firma.outputs.activa == 'true'
+        uses: actions/upload-artifact@v7
+        with:
+          name: instaladores-sin-firmar
+          path: |
+            release/InerCAD-Setup-${{ env.V }}.exe
+            release/InerCAD-${{ env.V }}-portable.exe
+          if-no-files-found: error
+          retention-days: 1
+          compression-level: 0
+
+      - name: Firmar los instaladores con SignPath
+        if: steps.firma.outputs.activa == 'true'
+        uses: signpath/github-action-submit-signing-request@v3
+        with:
+          api-token: ${{ secrets.SIGNPATH_API_TOKEN }}
+          organization-id: ${{ vars.SIGNPATH_ORGANIZATION_ID }}
+          project-slug: ${{ vars.SIGNPATH_PROJECT_SLUG || 'inercad' }}
+          signing-policy-slug: ${{ vars.SIGNPATH_SIGNING_POLICY_SLUG || 'release-signing' }}
+          artifact-configuration-slug: instaladores
+          github-artifact-id: ${{ steps.instaladores-sin-firmar.outputs.artifact-id }}
+          parameters: |
+            version: "${{ env.V }}"
+          wait-for-completion: true
+          wait-for-completion-timeout-in-seconds: 10800
+          output-artifact-directory: firmado/instaladores
+
+      - name: Comprobar y colocar los instaladores firmados
+        if: steps.firma.outputs.activa == 'true'
+        shell: pwsh
+        run: |
+          foreach ($n in "InerCAD-Setup-$env:V.exe", "InerCAD-$env:V-portable.exe") {
+            $s = Get-AuthenticodeSignature "firmado/instaladores/$n"
+            if ($s.Status -ne 'Valid') { throw "$n no tiene una firma válida: $($s.Status) $($s.StatusMessage)" }
+            Write-Host "$n firmado por $($s.SignerCertificate.Subject)"
+            Copy-Item "firmado/instaladores/$n" "release/$n" -Force
+          }
 
       - name: Release de GitHub con los instaladores
         shell: bash
         run: |
           (cd release && sha256sum "InerCAD-Setup-$V.exe" "InerCAD-$V-portable.exe" > SHA256SUMS.txt)
-          gh release view "$TAG" >/dev/null 2>&1 || gh release create "$TAG" --title "InerCAD $V" --generate-notes --verify-tag
+          NOTAS="Descargas y huellas SHA-256: ${SITE_URL}/#descargar · Code signing policy (política de firma de código): ${SITE_URL}/firma.html"
+          gh release view "$TAG" >/dev/null 2>&1 || gh release create "$TAG" --title "InerCAD $V" --notes "$NOTAS" --generate-notes --verify-tag
           gh release upload "$TAG" "release/InerCAD-Setup-$V.exe" "release/InerCAD-$V-portable.exe" release/SHA256SUMS.txt --clobber
 
       - name: Sitio web con los enlaces de descarga de esta versión
@@ -64,10 +183,7 @@ jobs:
         env:
           MSYS_NO_PATHCONV: '1'   # Git Bash no debe convertir --base=/repo/ en una ruta de Windows
         run: |
-          REPO="${GITHUB_REPOSITORY#*/}"
-          OWNER="${GITHUB_REPOSITORY_OWNER,,}"
-          if [[ "${REPO,,}" == *.github.io ]]; then URL="https://${REPO,,}"; BASE="/"; else URL="https://${OWNER}.github.io/${REPO}"; BASE="/${REPO}/"; fi
-          npm run site:web -- --site-url="$URL" --base="$BASE" --repo-url="https://github.com/${GITHUB_REPOSITORY}" --download-base="https://github.com/${GITHUB_REPOSITORY}/releases/download/${TAG}/"
+          npm run site:web -- --site-url="$SITE_URL" --base="$SITE_BASE" --repo-url="https://github.com/${GITHUB_REPOSITORY}" --download-base="https://github.com/${GITHUB_REPOSITORY}/releases/download/${TAG}/"
 
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3

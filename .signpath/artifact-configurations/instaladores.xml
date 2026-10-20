@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- SignPath · configuración de artefacto «instaladores»
+     Artefacto: el instalador NSIS y la versión portátil (release/InerCAD-Setup-X.Y.Z.exe y release/InerCAD-X.Y.Z-portable.exe),
+     construidos por release.yml con el InerCAD.exe ya firmado. Ambos llevan ProductVersion = FileVersion = X.Y.Z. -->
+<artifact-configuration xmlns="http://signpath.io/artifact-configuration/v1">
+  <parameters>
+    <parameter name="version" required="true" />
+  </parameters>
+  <zip-file>
+    <pe-file-set product-name="InerCAD" product-version="${version}" file-version="${version}">
+      <include path="InerCAD-Setup-*.exe" />
+      <include path="InerCAD-*-portable.exe" />
+      <for-each>
+        <authenticode-sign />
+      </for-each>
+    </pe-file-set>
+  </zip-file>
+</artifact-configuration>

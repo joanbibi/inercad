@@ -160,6 +160,8 @@ table.cmp tr:last-child td { border-bottom: 0; }
 .sha button { all: unset; cursor: pointer; color: var(--text); text-decoration: underline; text-underline-offset: 3px; flex: none; font-family: var(--font); font-size: 12.5px; }
 .note { display: flex; gap: 14px; margin-top: 28px; padding: 18px 20px; border: 1px solid var(--line-2); border-radius: var(--radius); background: var(--surface); color: var(--muted); font-size: 15.5px; }
 .note svg { width: 22px; height: 22px; flex: none; stroke: var(--warn); fill: none; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; margin-top: 2px; }
+.note.ok svg { stroke: var(--ok); }
+.note a { color: var(--text); }
 .reqs { display: flex; flex-wrap: wrap; gap: 8px 26px; margin-top: 22px; color: var(--faint); font-size: 14.5px; }
 
 /* ---------- FAQ ---------- */
@@ -196,6 +198,8 @@ footer { border-top: 1px solid var(--line); padding: 48px 0 56px; color: var(--f
 .prose ul, .prose ol { padding-left: 22px; }
 .prose li { margin: 6px 0; }
 .prose code { font-family: var(--mono); font-size: .9em; background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 1px 6px; color: var(--text); }
+.prose pre { font-family: var(--mono); font-size: .9em; color: var(--text); background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 14px 18px; margin: 14px 0; overflow-x: auto; }
+.prose pre code { background: none; border: 0; padding: 0; font-size: inherit; }
 kbd { font-family: var(--mono); font-size: .84em; background: var(--surface); border: 1px solid var(--line-2); border-bottom-width: 2px; border-radius: 6px; padding: 1px 7px; color: var(--text); white-space: nowrap; }
 .prose table { width: 100%; border-collapse: collapse; margin: 18px 0; font-size: 15.5px; }
 .prose th, .prose td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
