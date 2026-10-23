@@ -2,6 +2,7 @@
  *
  *   public/index.html, guia.html, firma.html, 404.html   portada, guía, política de firma y página de error (desde site/)
  *   public/aviso-legal.html, privacidad.html             textos legales (desde site/)
+ *   public/perfiles/                         tablas y fichas de perfiles normalizados (tools/profile-pages.js)
  *   public/app/                              la aplicación web, instalable como PWA y con funcionamiento sin conexión
  *   public/descargas/                        instalador y versión portátil de Windows + SHA256SUMS.txt (si existen en release/)
  *
@@ -138,6 +139,13 @@ for (const f of walk(OUT).filter((p) => /\.(html|txt|xml|json)$/.test(p))) {
   const p = path.join(OUT, f);
   fs.writeFileSync(p, fill(fs.readFileSync(p, 'utf8')));
 }
+// fichas y tablas de perfiles, calculadas con el motor de la aplicación
+const profilePages = require('./profile-pages.js')();
+for (const pg of profilePages) {
+  const p = path.join(OUT, pg.file);
+  mkdir(path.dirname(p));
+  fs.writeFileSync(p, fill(pg.html));
+}
 // recursos compartidos: tipografías, marca e iconos
 copyDir(path.join(ROOT, 'fonts'), path.join(OUT, 'fonts'), (f) => /\.woff2$/.test(f));
 copy(path.join(ROOT, 'css', 'fonts.css'), path.join(OUT, 'css', 'fonts.css'));
@@ -160,6 +168,7 @@ copy(path.join(ROOT, 'build', 'icon.png'), path.join(APP, 'assets', 'icon-512.pn
 let appHtml = fs.readFileSync(path.join(APP, 'index.html'), 'utf8');
 appHtml = appHtml.replace('<link rel="stylesheet" href="css/fonts.css">', '<link rel="manifest" href="manifest.webmanifest">\n  <link rel="stylesheet" href="css/fonts.css">');
 appHtml = appHtml.replace('<meta name="color-scheme" content="dark light">', '<meta name="color-scheme" content="dark light">\n  <meta name="theme-color" content="#212529">');
+appHtml = appHtml.replace(/<title>[^<]*<\/title>/,'<title>Calculadora de momento de inercia online · InerCAD</title>');   // el programa de escritorio conserva su título
 appHtml = appHtml.replace('<link rel="icon" type="image/png" href="assets/icon-32.png">', '<link rel="icon" type="image/png" sizes="32x32" href="assets/icon-32.png">\n  <link rel="icon" type="image/png" sizes="192x192" href="assets/icon-192.png">');
 if (SITE_URL) {   // la app también es una página pública: dirección canónica y vista previa al compartirla
   appHtml = appHtml.replace('<link rel="stylesheet" href="css/fonts.css">', `<link rel="canonical" href="${SITE_URL}/app/">
@@ -227,7 +236,7 @@ if (have && WITH_INSTALLERS) {
 /* ---------- Ficheros de alojamiento ---------- */
 fs.writeFileSync(path.join(OUT, 'robots.txt'), `User-agent: *\nAllow: /\n${SITE_URL ? `Sitemap: ${SITE_URL}/sitemap.xml\n` : ''}`);
 if (SITE_URL) {
-  const urls = ['', 'guia.html', 'app/', 'firma.html', 'privacidad.html', 'aviso-legal.html'].map((u) => `  <url><loc>${SITE_URL}/${u}</loc></url>`).join('\n');
+  const urls = ['', 'guia.html', 'app/', ...profilePages.map((p) => p.url), 'firma.html', 'privacidad.html', 'aviso-legal.html'].map((u) => `  <url><loc>${SITE_URL}/${u}</loc></url>`).join('\n');
   fs.writeFileSync(path.join(OUT, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls}\n</urlset>\n`);
 }
 fs.writeFileSync(path.join(OUT, '.nojekyll'), '');

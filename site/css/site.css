@@ -210,6 +210,41 @@ kbd { font-family: var(--mono); font-size: .84em; background: var(--surface); bo
 .prose .shot { margin: 26px 0; }
 .formula { font-family: var(--math); font-style: italic; font-size: 1.12em; color: var(--text); background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 14px 18px; margin: 14px 0; overflow-x: auto; }
 
+/* ---------- Perfiles: fichas y tablas ---------- */
+.page { padding: 8px 0 96px; }
+.crumbs { margin: 28px 0 8px; font-size: 14px; color: var(--faint); }
+.crumbs a { color: var(--muted); text-decoration: none; }
+.crumbs a:hover { color: var(--text); text-decoration: underline; }
+.prose.wide { max-width: none; }
+.sheet-head { display: grid; grid-template-columns: minmax(0, 1fr) minmax(260px, 380px); gap: 40px; align-items: center; }
+.sheet-key { font-family: var(--mono); font-size: 15px; color: var(--text); }
+.sheet-cta .btn { margin: 4px 8px 4px 0; }
+.sheet-fig { margin: 0; padding: 18px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); }
+.sec-svg { display: block; width: 100%; height: auto; max-height: 380px; }
+.sec-svg .sec { fill: var(--surface-2); stroke: var(--text); stroke-width: 1.4; stroke-linejoin: round; fill-rule: evenodd; vector-effect: non-scaling-stroke; }
+.sec-svg .ax { stroke: var(--faint); stroke-width: 1; stroke-dasharray: 6 4; vector-effect: non-scaling-stroke; }
+.sec-svg .dim { fill: none; stroke: var(--muted); stroke-width: 1; vector-effect: non-scaling-stroke; }
+.sec-svg text { fill: var(--muted); font-family: var(--mono); }
+.sec-svg .axl { fill: var(--faint); font-family: var(--math); font-style: italic; }
+.prose table.kv td:last-child { text-align: right; font-family: var(--mono); color: var(--text); white-space: nowrap; }
+.prose table.kv td:first-child { width: 72px; color: var(--text); }
+.prose .note { font-size: 14.5px; color: var(--faint); }
+.tscroll { overflow-x: auto; margin: 18px 0; border: 1px solid var(--line); border-radius: var(--radius); }
+.prose .tscroll table { margin: 0; white-space: nowrap; font-size: 14.5px; }
+.ptable th, .ptable td { text-align: right; padding: 8px 12px; }
+.prose .ptable th { text-transform: none; letter-spacing: 0; font-size: 14.5px; color: var(--muted); }
+.ptable th:first-child, .ptable td:first-child { text-align: left; position: sticky; left: 0; background: var(--bg); }
+.ptable tbody tr:hover td { background: var(--surface); }
+.pager { display: flex; justify-content: space-between; gap: 12px; margin-top: 48px; padding-top: 20px; border-top: 1px solid var(--line); }
+.series-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 18px; margin-top: 28px; }
+.series-grid .card h2 { margin: 0 0 6px; padding: 0; font-size: 1.35rem; }
+.series-grid .card h2 a { color: var(--text); text-decoration: none; }
+.series-grid .card p { margin: 0 0 12px; }
+.series-links { display: flex; flex-wrap: wrap; gap: 6px 12px; font-family: var(--mono); font-size: 14px; }
+@media (max-width: 980px) {
+  .sheet-head { grid-template-columns: 1fr; gap: 24px; }
+}
+
 /* ---------- 404 ---------- */
 .nf { min-height: 70vh; display: grid; place-items: center; text-align: center; padding: 60px 0; }
 .nf .big { font: 300 clamp(5rem, 16vw, 9rem)/1 var(--mono); letter-spacing: -.06em; color: var(--line-2); }

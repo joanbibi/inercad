@@ -92,12 +92,20 @@
     },
     {
       id: 'RHS', label: 'RHS · Tubo rectangular (r ext. = 2t)', type: 'rhs',
-      items: RHS.map((r) => ({ n: `RHS ${r[0]}×${r[1]}×${fmt(r[2])}`, type: 'rhs', p: { w: r[0], h: r[1], t: r[2], r: 2 * r[2] } })),
+      // designación h×b×t: el canto (h) en vertical, como en las tablas
+      items: RHS.map((r) => ({ n: `RHS ${r[0]}×${r[1]}×${fmt(r[2])}`, type: 'rhs', p: { w: r[1], h: r[0], t: r[2], r: 2 * r[2] } })),
     },
   ];
 
   function makeShape(item, opts) {
     return S.create(item.type, Object.assign({ name: item.n, p: item.p }, opts || {}));
+  }
+
+  /* Identificador para URL: «IPE 300» → ipe-300, «CHS 48,3×3,2» → chs-48-3x3-2 */
+  const slug = (n) => n.toLowerCase().replace(/×/g, 'x').replace(/[^a-z0-9x]+/g, '-').replace(/^-+|-+$/g, '');
+  function findBySlug(s) {
+    for (const ser of series) for (const it of ser.items) if (slug(it.n) === s) return it;
+    return null;
   }
 
   /* ---------- Ejemplos ---------- */
@@ -160,5 +168,5 @@
     },
   ];
 
-  return { series, examples, makeShape };
+  return { series, examples, makeShape, slug, findBySlug };
 });

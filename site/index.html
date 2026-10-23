@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>InerCAD · Momentos de inercia de cualquier sección</title>
-  <meta name="description" content="InerCAD calcula al instante el área, el centroide, los momentos de inercia, los ejes principales y los módulos resistentes de cualquier sección. Dibuja, arrastra y modifica la geometría. Instalador para Windows y versión web.">
+  <title>Calculadora de momento de inercia online y gratis · InerCAD</title>
+  <meta name="description" content="Calculadora de momento de inercia gratis: dibuja cualquier sección (perfiles IPE, HEA, HEB, en T, L, tubos o polígonos) y obtén al instante el área, el centroide, los momentos de inercia, los ejes principales y los módulos resistentes. Online y para Windows.">
   <meta name="theme-color" content="#212529">
   <link rel="icon" type="image/png" sizes="32x32" href="assets/icon-32.png">
   <link rel="icon" type="image/png" sizes="192x192" href="assets/icon-192.png">
@@ -12,7 +12,7 @@
   <link rel="canonical" href="{{SITE_URL}}/">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="InerCAD">
-  <meta property="og:title" content="InerCAD · Momentos de inercia de cualquier sección">
+  <meta property="og:title" content="InerCAD · Calculadora de momento de inercia online y gratis">
   <meta property="og:description" content="Dibuja la sección, arrástrala y obtén al instante área, centroide, inercias, ejes principales y módulos resistentes.">
   <meta property="og:url" content="{{SITE_URL}}/">
   <meta property="og:image" content="{{SITE_URL}}/assets/og.jpg">
@@ -20,7 +20,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <link rel="stylesheet" href="css/fonts.css">
   <link rel="stylesheet" href="css/site.css">
-  <script type="application/ld+json">[{"@context":"https://schema.org","@type":"WebSite","name":"InerCAD","url":"{{SITE_URL}}/","inLanguage":"es"},{"@context":"https://schema.org","@type":"SoftwareApplication","name":"InerCAD","url":"{{SITE_URL}}/","image":"{{SITE_URL}}/assets/og.jpg","applicationCategory":"EngineeringApplication","operatingSystem":"Windows 10, Windows 11, navegador web","softwareVersion":"{{VERSION}}","inLanguage":"es","description":"Calculadora interactiva de propiedades geométricas y momentos de inercia de secciones planas.","downloadUrl":"{{DOWNLOAD_BASE}}{{SETUP_NAME}}","license":"https://opensource.org/licenses/MIT","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"EUR"},"author":{"@type":"Person","name":"joanbibi","url":"https://github.com/joanbibi"}}]</script>
+  <script type="application/ld+json">[{"@context":"https://schema.org","@type":"WebSite","name":"InerCAD","url":"{{SITE_URL}}/","inLanguage":"es"},{"@context":"https://schema.org","@type":"SoftwareApplication","name":"InerCAD","alternateName":"Calculadora de momento de inercia InerCAD","url":"{{SITE_URL}}/","image":"{{SITE_URL}}/assets/og.jpg","applicationCategory":"EngineeringApplication","operatingSystem":"Windows 10, Windows 11, navegador web","softwareVersion":"{{VERSION}}","inLanguage":"es","description":"Calculadora interactiva de propiedades geométricas y momentos de inercia de secciones planas.","downloadUrl":"{{DOWNLOAD_BASE}}{{SETUP_NAME}}","license":"https://opensource.org/licenses/MIT","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"EUR"},"author":{"@type":"Person","name":"joanbibi","url":"https://github.com/joanbibi"}}]</script>
   <!--anuncios-->
 </head>
 <body>
@@ -35,6 +35,7 @@
       <li><a href="#precision">Precisión</a></li>
       <li><a href="#descargar">Descargar</a></li>
       <li><a href="guia.html">Guía</a></li>
+      <li><a href="perfiles/">Perfiles</a></li>
     </ul>
     <div class="nav-actions">
       <button class="icon-btn" id="themeBtn" type="button" aria-label="Cambiar entre tema claro y oscuro" title="Tema claro / oscuro">
@@ -51,7 +52,7 @@
     <div class="wrap">
       <div class="hero-copy">
         <span class="lockup" role="img" aria-label="InerCAD"></span>
-        <p class="eyebrow">Propiedades geométricas de secciones planas</p>
+        <p class="eyebrow">Calculadora de momento de inercia</p>
         <h1>Los momentos de inercia de cualquier sección, calculados al instante.</h1>
         <p class="lead">Dibuja la sección, arrástrala, cambia sus medidas y mira cómo se recalculan el área, el centroide, las inercias, los ejes principales y los módulos resistentes. Con precisión exacta, sin aproximar las curvas.</p>
         <div class="cta">
@@ -93,7 +94,7 @@
         <article class="card rv">
           <div class="ico"><svg viewBox="0 0 24 24"><path d="M12 3l9 5-9 5-9-5zM3 13l9 5 9-5"/></svg></div>
           <h3>Formas, perfiles y catálogo</h3>
-          <p>Once formas básicas, ocho perfiles paramétricos (I, T, L, U, Z, cruz, tubos) y un catálogo normalizado: IPE, HEA, HEB, angulares y tubos CHS, SHS y RHS.</p>
+          <p>Once formas básicas, ocho perfiles paramétricos (I, T, L, U, Z, cruz, tubos) y un catálogo normalizado: IPE, HEA, HEB, angulares y tubos CHS, SHS y RHS. Consulta sus propiedades en las <a href="perfiles/">tablas de perfiles</a>.</p>
         </article>
         <article class="card rv">
           <div class="ico"><svg viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="14" rx="1"/><circle cx="12" cy="12" r="3.5" stroke-dasharray="2.2 2"/></svg></div>
@@ -165,7 +166,7 @@
         <div class="spot-copy">
           <h3>Catálogo de perfiles normalizados</h3>
           <p>Inserta un IPE, HEA o HEB con sus acuerdos reales y modifícalo como cualquier otra forma, o conviértelo en un polígono editable vértice a vértice.</p>
-          <ul><li>IPE, HEA, HEB, angulares L, tubos CHS, SHS y RHS</li><li>Búsqueda rápida por nombre o medidas</li></ul>
+          <ul><li>IPE, HEA, HEB, angulares L, tubos CHS, SHS y RHS</li><li>Búsqueda rápida por nombre o medidas</li><li><a href="perfiles/">Tablas y fichas de cada perfil</a>, con un botón para abrirlo en la aplicación</li></ul>
         </div>
         <figure class="shot"><img loading="lazy" src="assets/screens/catalogo.jpg" width="2560" height="1600" alt="Catálogo de perfiles de InerCAD con la búsqueda HEB."></figure>
       </div>
@@ -327,7 +328,7 @@
         <p style="margin:0;max-width:34ch">Momentos de inercia de secciones planas, de forma interactiva y exacta.</p>
       </div>
       <div><h4>Producto</h4><ul><li><a href="#funciones">Funciones</a></li><li><a href="#capturas">Capturas</a></li><li><a href="#precision">Precisión</a></li><li><a href="#faq">Preguntas</a></li></ul></div>
-      <div><h4>Usar</h4><ul><li><a href="app/">Abrir la app web</a></li><li><a href="#descargar">Descargar para Windows</a></li><li><a href="guia.html">Guía de uso</a></li><li data-repo><a href="{{REPO_URL}}/releases">Todas las versiones</a></li><li data-repo><a href="{{REPO_URL}}">Código fuente</a></li></ul></div>
+      <div><h4>Usar</h4><ul><li><a href="app/">Abrir la app web</a></li><li><a href="#descargar">Descargar para Windows</a></li><li><a href="guia.html">Guía de uso</a></li><li><a href="perfiles/">Tablas de perfiles</a></li><li data-repo><a href="{{REPO_URL}}/releases">Todas las versiones</a></li><li data-repo><a href="{{REPO_URL}}">Código fuente</a></li></ul></div>
       <div><h4>Proyecto</h4><ul><li><a href="#apoyar">Apoyar InerCAD</a></li><li><a href="firma.html">Política de firma de código</a></li><li><a href="aviso-legal.html">Aviso legal</a></li><li><a href="privacidad.html">Privacidad y cookies</a></li><!--con-anuncios--><li><a href="#" data-cookies>Configurar cookies</a></li><!--/con-anuncios--></ul></div>
     </div>
     <div class="legal"><span>© <span id="year">2026</span> InerCAD · Versión {{VERSION}}</span><span>Resultados orientativos: verifica siempre los datos de partida.</span></div>

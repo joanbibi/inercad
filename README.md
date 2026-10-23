@@ -130,9 +130,17 @@ Activación, una vez aprobado el proyecto en SignPath Foundation (en *Settings �
 
 Sin `SIGNPATH_ORGANIZATION_ID` o sin el token, el flujo publica igual que antes, sin firmar.
 
+### Tablas y fichas de perfiles
+
+`tools/profile-pages.js` genera en `public/perfiles/` una ficha por cada perfil del catálogo (IPE, HEA, HEB, L, CHS, SHS, RHS),
+una tabla por serie y un índice. Las propiedades (área, peso, inercias, módulos elásticos y plásticos, radios de giro y, en los
+angulares, ejes principales) se calculan con el propio motor, así que coinciden siempre con la aplicación. Cada ficha enlaza a
+`app/?perfil=<identificador>` (p. ej. `app/?perfil=ipe-300`), que abre ese perfil en la app web; el trabajo anterior se
+recupera con *Deshacer*.
+
 ### Anuncios, textos legales y apoyo
 
-La web puede mostrar anuncios de **Google AdSense** en la portada y la guía. **Nunca** en la app web (`/app/`) ni en el programa
+La web puede mostrar anuncios de **Google AdSense** en las páginas de contenido (portada, guía y fichas de perfiles). **Nunca** en la app web (`/app/`) ni en el programa
 de escritorio, que siguen sin conexiones ni anuncios. También tiene un **aviso legal**, una política de **privacidad y cookies**
 y una sección **Apoyar** (`#apoyar`), enlazada desde la ayuda de la app y el menú *Ayuda* del programa.
 
@@ -253,6 +261,7 @@ electron/           Versión de escritorio (proceso principal y puente seguro)
 tools/make-brand.js Separa el logotipo original en símbolo y nombre y genera iconos (Electron + JS puro)
 tools/fonts.js      Copia las fuentes desde @fontsource y genera css/fonts.css
 tools/build-site.js Genera el sitio completo en public/ (con la app como PWA y las descargas)
+tools/profile-pages.js  Fichas y tablas de perfiles normalizados para el sitio
 tools/make-screenshots.js  Capturas reales de la aplicación para el sitio
 build/installer.nsh Ajustes del instalador de Windows (limpieza de la asociación de archivos)
 .signpath/          Configuraciones de artefacto para la firma con SignPath

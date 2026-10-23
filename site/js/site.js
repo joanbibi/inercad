@@ -64,7 +64,9 @@
   document.querySelectorAll('[data-cookies]').forEach(function (a) {
     a.addEventListener('click', function (e) {
       e.preventDefault();
-      if (hasAds) consentMessage(); else location.href = './#configurar-cookies';
+      if (hasAds) { consentMessage(); return; }
+      var home = document.querySelector('a[aria-label="InerCAD, inicio"]');
+      location.href = (home ? home.getAttribute('href') : './') + '#configurar-cookies';
     });
   });
   if (hasAds && location.hash === '#configurar-cookies') {

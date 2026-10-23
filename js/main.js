@@ -11,6 +11,17 @@
     View.fit(null, true);
   }
   App.resetHistory();
+
+  // Enlace directo a un perfil del catálogo (app/?perfil=ipe-300, desde las fichas de la web).
+  // Sustituye el documento como un ejemplo: el trabajo anterior se recupera con Deshacer.
+  const perfil = new URLSearchParams(location.search).get('perfil');
+  const item = perfil && Catalog.findBySlug(perfil);
+  if (item) {
+    App.replaceDoc({ name: item.n, unit: 'mm', shapes: [Catalog.makeShape(item, { color: Shapes.COLORS[0] })] });
+    if (restored) UI.toast(`Perfil abierto: ${item.n}`, 'ok', { action: { label: 'Deshacer', run: App.undo } });
+  }
+  if (perfil) history.replaceState(null, '', location.pathname);
+
   document.getElementById('projName').value = App.doc.name;
   document.getElementById('unitSel').value = App.doc.unit;
   document.getElementById('cv').focus();
