@@ -245,6 +245,39 @@ kbd { font-family: var(--mono); font-size: .84em; background: var(--surface); bo
   .sheet-head { grid-template-columns: 1fr; gap: 24px; }
 }
 
+/* ---------- Fórmulas de secciones ---------- */
+.prose .fine { font-size: 14.5px; color: var(--faint); margin-top: 10px; }
+.sec-svg .g { fill: var(--text); }
+.sec-svg .gl { fill: var(--text); font-family: var(--math); font-style: italic; }
+.sec-svg .sym { fill: var(--text); font-family: var(--math); font-style: italic; }
+.sec-svg .pax { stroke: var(--warn); stroke-width: 1; stroke-dasharray: 10 4 2 4; vector-effect: non-scaling-stroke; }
+.sec-svg .paxl { fill: var(--warn); font-family: var(--math); font-style: italic; }
+.prose .tscroll table.ftable, .prose .tscroll table.kv2 { white-space: normal; }
+.prose table.ftable td:first-child, .prose table.ftable td:last-child { font-family: var(--math); font-style: italic; color: var(--text); }
+.prose table.ftable td:last-child { white-space: nowrap; }
+.prose table.ftable.sum td { font-family: var(--math); font-style: italic; color: var(--text); white-space: nowrap; }
+.prose table.ftable.sum td:first-child { font-family: var(--font); font-style: normal; }
+.prose table.ftable small { font-family: var(--font); font-style: normal; color: var(--faint); }
+.prose .tscroll table.ftable th, .prose .tscroll table.ftable td { padding-left: 14px; padding-right: 14px; }
+.prose table.kv2 td:nth-child(3), .prose table.kv2 td:nth-child(4) { text-align: right; font-family: var(--mono); color: var(--text); white-space: nowrap; }
+.prose table.kv2 td:first-child { width: 72px; color: var(--text); }
+.prose .tscroll table.kv2 td { padding-left: 14px; padding-right: 14px; }
+.prose .calc { font-family: var(--math); font-style: italic; color: var(--text); margin: 6px 0 14px; padding: 2px 0; }
+.steps-x { padding-left: 22px; }
+.steps-x > li { margin: 14px 0; }
+.steps-x > li > b { color: var(--text); font-weight: 500; }
+.ptable tr.tot td { font-weight: 500; color: var(--text); border-top: 1px solid var(--line-2); }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chips a { display: inline-block; padding: 5px 12px; border: 1px solid var(--line-2); border-radius: 999px; color: var(--text); text-decoration: none; font-size: 14.5px; }
+.chips a:hover { background: var(--surface); }
+.lead-p { font-size: 1.12em; max-width: 760px; }
+.sec-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(165px, 1fr)); gap: 14px; margin: 30px 0 8px; }
+.sec-grid a.card { display: flex; flex-direction: column; gap: 6px; padding: 16px 16px 14px; text-decoration: none; transition: border-color .2s; }
+.sec-grid a.card:hover { border-color: var(--line-2); }
+.sec-grid a.card b { color: var(--text); font-weight: 500; margin-top: 6px; }
+.sec-grid a.card span { color: var(--muted); font-family: var(--math); font-style: italic; font-size: 14px; }
+.sec-svg.thumb { height: 110px; max-height: 110px; }
+
 /* ---------- 404 ---------- */
 .nf { min-height: 70vh; display: grid; place-items: center; text-align: center; padding: 60px 0; }
 .nf .big { font: 300 clamp(5rem, 16vw, 9rem)/1 var(--mono); letter-spacing: -.06em; color: var(--line-2); }

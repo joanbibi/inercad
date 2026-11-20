@@ -138,9 +138,17 @@ angulares, ejes principales) se calculan con el propio motor, así que coinciden
 `app/?perfil=<identificador>` (p. ej. `app/?perfil=ipe-300`), que abre ese perfil en la app web; el trabajo anterior se
 recupera con *Deshacer*.
 
+### Fórmulas por tipo de sección
+
+`tools/section-pages.js` genera en `public/secciones/` una página por sección (rectángulo, rectangular hueca, círculo, tubo,
+triángulo, trapecio, semicírculo, T, I, L y U) con sus fórmulas, la deducción, un ejemplo resuelto paso a paso, errores
+frecuentes y un índice con la tabla resumen y el teorema de Steiner. Las fórmulas cerradas se comparan con el motor al
+generar la web (si no coinciden, la generación se detiene) y en `tests/sections.test.js`. Cada página enlaza a
+`app/?forma=<tipo>&<parámetro>=<valor>…` (p. ej. `app/?forma=rect&w=150&h=300`, medidas en mm), que abre esa forma en la app web.
+
 ### Anuncios, textos legales y apoyo
 
-La web puede mostrar anuncios de **Google AdSense** en las páginas de contenido (portada, guía y fichas de perfiles). **Nunca** en la app web (`/app/`) ni en el programa
+La web puede mostrar anuncios de **Google AdSense** en las páginas de contenido (portada, guía, fórmulas de secciones y fichas de perfiles). **Nunca** en la app web (`/app/`) ni en el programa
 de escritorio, que siguen sin conexiones ni anuncios. También tiene un **aviso legal**, una política de **privacidad y cookies**
 y una sección **Apoyar** (`#apoyar`), enlazada desde la ayuda de la app y el menú *Ayuda* del programa.
 
@@ -262,6 +270,8 @@ tools/make-brand.js Separa el logotipo original en símbolo y nombre y genera ic
 tools/fonts.js      Copia las fuentes desde @fontsource y genera css/fonts.css
 tools/build-site.js Genera el sitio completo en public/ (con la app como PWA y las descargas)
 tools/profile-pages.js  Fichas y tablas de perfiles normalizados para el sitio
+tools/section-pages.js  Fórmulas por tipo de sección con ejemplos resueltos para el sitio
+tools/site-template.js  Plantilla común de las páginas generadas del sitio
 tools/make-screenshots.js  Capturas reales de la aplicación para el sitio
 build/installer.nsh Ajustes del instalador de Windows (limpieza de la asociación de archivos)
 .signpath/          Configuraciones de artefacto para la firma con SignPath

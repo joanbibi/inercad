@@ -3,6 +3,7 @@
  *   public/index.html, guia.html, firma.html, 404.html   portada, guía, política de firma y página de error (desde site/)
  *   public/aviso-legal.html, privacidad.html             textos legales (desde site/)
  *   public/perfiles/                         tablas y fichas de perfiles normalizados (tools/profile-pages.js)
+ *   public/secciones/                        fórmulas por tipo de sección con ejemplos resueltos (tools/section-pages.js)
  *   public/app/                              la aplicación web, instalable como PWA y con funcionamiento sin conexión
  *   public/descargas/                        instalador y versión portátil de Windows + SHA256SUMS.txt (si existen en release/)
  *
@@ -139,9 +140,10 @@ for (const f of walk(OUT).filter((p) => /\.(html|txt|xml|json)$/.test(p))) {
   const p = path.join(OUT, f);
   fs.writeFileSync(p, fill(fs.readFileSync(p, 'utf8')));
 }
-// fichas y tablas de perfiles, calculadas con el motor de la aplicación
+// fichas y tablas de perfiles y fórmulas de secciones, calculadas y comprobadas con el motor de la aplicación
 const profilePages = require('./profile-pages.js')();
-for (const pg of profilePages) {
+const sectionPages = require('./section-pages.js')();
+for (const pg of [...sectionPages, ...profilePages]) {
   const p = path.join(OUT, pg.file);
   mkdir(path.dirname(p));
   fs.writeFileSync(p, fill(pg.html));
@@ -236,7 +238,7 @@ if (have && WITH_INSTALLERS) {
 /* ---------- Ficheros de alojamiento ---------- */
 fs.writeFileSync(path.join(OUT, 'robots.txt'), `User-agent: *\nAllow: /\n${SITE_URL ? `Sitemap: ${SITE_URL}/sitemap.xml\n` : ''}`);
 if (SITE_URL) {
-  const urls = ['', 'guia.html', 'app/', ...profilePages.map((p) => p.url), 'firma.html', 'privacidad.html', 'aviso-legal.html'].map((u) => `  <url><loc>${SITE_URL}/${u}</loc></url>`).join('\n');
+  const urls = ['', 'guia.html', 'app/', ...sectionPages.map((p) => p.url), ...profilePages.map((p) => p.url), 'firma.html', 'privacidad.html', 'aviso-legal.html'].map((u) => `  <url><loc>${SITE_URL}/${u}</loc></url>`).join('\n');
   fs.writeFileSync(path.join(OUT, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls}\n</urlset>\n`);
 }
 fs.writeFileSync(path.join(OUT, '.nojekyll'), '');

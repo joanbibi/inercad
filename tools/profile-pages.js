@@ -14,19 +14,8 @@ const S = require(path.join(ROOT, 'js', 'shapes.js'));
 const C = require(path.join(ROOT, 'js', 'profiles.js'));
 
 const STEEL = 7850;   // kg/m³
-const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+const { R, esc, num, mm, fix, page: basePage } = require('./site-template.js');
 
-/* 4 cifras significativas, coma decimal y espacio fino en los miles (solo a partir de 5 cifras) */
-function num(v, sig = 4) {
-  if (!isFinite(v)) return '—';
-  const a = Math.abs(v);
-  const d = a === 0 ? 0 : Math.max(0, sig - 1 - Math.floor(Math.log10(a)));
-  let [i, f] = v.toFixed(d).split('.');
-  if (i.replace('-', '').length > 4) i = i.replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
-  return f ? `${i},${f}` : i;
-}
-const mm = (v) => String(+v.toFixed(1)).replace('.', ',');
-const fix = (v, d) => (isFinite(v) ? v.toFixed(d).replace('.', ',') : '—');
 // como en las tablas: peso con 1 decimal, radios de giro y distancias (cm) con 2
 const fmtU = (v, u) => (u === 'kg/m' ? fix(v, 1) : u === 'cm' ? fix(v, 2) : num(v));
 
@@ -94,73 +83,8 @@ function drawing(item, c) {
   return `<svg class="sec-svg" viewBox="0 0 ${+W.toFixed(2)} ${+H.toFixed(2)}" role="img" aria-label="Sección del perfil ${esc(item.n)} con sus ejes y y z">${parts.join('')}</svg>`;
 }
 
-/* ---------- Plantilla común ---------- */
-const R = '../';
-function page({ title, desc, url, body, crumbs, ogTitle }) {
-  const ld = {
-    '@context': 'https://schema.org', '@type': 'BreadcrumbList',
-    itemListElement: crumbs.map((c, i) => ({ '@type': 'ListItem', position: i + 1, name: c[0], item: `{{SITE_URL}}/${c[1]}` })),
-  };
-  return `<!doctype html>
-<html lang="es" data-theme="auto">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>${esc(title)}</title>
-  <meta name="description" content="${esc(desc)}">
-  <meta name="theme-color" content="#212529">
-  <link rel="icon" type="image/png" sizes="32x32" href="${R}assets/icon-32.png">
-  <link rel="icon" type="image/png" sizes="192x192" href="${R}assets/icon-192.png">
-  <link rel="apple-touch-icon" href="${R}assets/icon-192.png">
-  <link rel="canonical" href="{{SITE_URL}}/${url}">
-  <meta property="og:type" content="website">
-  <meta property="og:site_name" content="InerCAD">
-  <meta property="og:title" content="${esc(ogTitle || title)}">
-  <meta property="og:description" content="${esc(desc)}">
-  <meta property="og:url" content="{{SITE_URL}}/${url}">
-  <meta property="og:image" content="{{SITE_URL}}/assets/og.jpg">
-  <meta property="og:locale" content="es_ES">
-  <meta name="twitter:card" content="summary_large_image">
-  <link rel="stylesheet" href="${R}css/fonts.css">
-  <link rel="stylesheet" href="${R}css/site.css">
-  <script type="application/ld+json">${JSON.stringify(ld)}</script>
-  <!--anuncios-->
-</head>
-<body>
-<a class="skip" href="#contenido">Saltar al contenido</a>
-<header class="nav">
-  <div class="wrap">
-    <a href="${R}" aria-label="InerCAD, inicio"><span class="logo-word" role="img" aria-label="InerCAD"></span></a>
-    <ul>
-      <li><a href="${R}#funciones">Funciones</a></li>
-      <li><a href="${R}#descargar">Descargar</a></li>
-      <li><a href="${R}guia.html">Guía</a></li>
-      <li><a href="${R}perfiles/" style="color:var(--text)">Perfiles</a></li>
-    </ul>
-    <div class="nav-actions">
-      <button class="icon-btn" id="themeBtn" type="button" aria-label="Cambiar entre tema claro y oscuro" title="Tema claro / oscuro">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path id="themeIcon" d="M20 14.5A8 8 0 0 1 9.5 4 8 8 0 1 0 20 14.5z"/></svg>
-      </button>
-      <a class="btn primary sm" href="${R}app/">Abrir la app</a>
-    </div>
-  </div>
-</header>
-
-<main id="contenido" class="wrap page">
-  <nav class="crumbs" aria-label="Ruta">${crumbs.map((c, i) => i < crumbs.length - 1 ? `<a href="${R}${c[1]}">${esc(c[0])}</a>` : `<span aria-current="page">${esc(c[0])}</span>`).join(' <span aria-hidden="true">›</span> ')}</nav>
-${body}
-</main>
-
-<footer>
-  <div class="wrap">
-    <div class="legal" style="margin-top:0;padding-top:0;border-top:0"><span>© <span id="year">2026</span> InerCAD · Versión {{VERSION}}</span><span><a href="${R}">Inicio</a> · <a href="${R}perfiles/">Perfiles</a> · <a href="${R}guia.html">Guía</a> · <a href="${R}aviso-legal.html">Aviso legal</a> · <a href="${R}privacidad.html">Privacidad y cookies</a><!--con-anuncios--> · <a href="#" data-cookies>Configurar cookies</a><!--/con-anuncios--></span></div>
-  </div>
-</footer>
-<script src="${R}js/site.js"></script>
-</body>
-</html>
-`;
-}
+/* ---------- Plantilla común (tools/site-template.js), con «Perfiles» resaltado en el menú ---------- */
+const page = (o) => basePage(Object.assign({ active: 'perfiles/' }, o));
 
 const unit = { A: 'cm²', G: 'kg/m', I: 'cm⁴', W: 'cm³', i: 'cm', e: 'cm' };
 

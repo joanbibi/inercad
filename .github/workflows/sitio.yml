@@ -6,7 +6,7 @@ name: Publicar sitio
 on:
   push:
     branches: [main]
-    paths: ['site/**', 'tools/build-site.js', 'index.html', 'css/**', 'js/**', 'fonts/**', 'assets/**']
+    paths: ['site/**', 'tools/build-site.js', 'tools/*-pages.js', 'tools/site-template.js', 'index.html', 'css/**', 'js/**', 'fonts/**', 'assets/**']
   workflow_dispatch:
 
 concurrency:

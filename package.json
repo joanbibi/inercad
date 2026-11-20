@@ -6,7 +6,7 @@
   "license": "MIT",
   "scripts": {
     "start": "node serve.js 5173",
-    "test": "node tests/engine.test.js && node tests/util.test.js",
+    "test": "node tests/engine.test.js && node tests/util.test.js && node tests/sections.test.js",
     "build": "node build.js",
     "desktop": "electron .",
     "desktop:smoke": "electron . --smoke-test",
